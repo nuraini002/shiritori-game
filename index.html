@@ -1,0 +1,682 @@
+html_content = """<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiritori - Game Sambung Kata Jepang</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff5e62;
+            --secondary: #ff9966;
+            --dark: #2d3748;
+            --light: #f7fafc;
+            --accent: #4fd1c5;
+            --danger: #e53e3e;
+            --success: #38a169;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 {
+            font-family: 'Zen Maru Gothic', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .badge-jp {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            padding: 30px;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Lobby Screen */
+        .lobby-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .rules-box {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: left;
+            border-left: 5px solid var(--primary);
+        }
+
+        .rules-box h3 {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .rules-box ul {
+            padding-left: 20px;
+            font-size: 0.9rem;
+            color: #4a5568;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 94, 98, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 94, 98, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Game Screen */
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--light);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .timer {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .target-indicator {
+            background: #fff5f5;
+            border: 2px dashed var(--primary);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .target-indicator span {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Zen Maru Gothic', sans-serif;
+        }
+
+        /* Chat / History Box */
+        .history-container {
+            height: 250px;
+            background: var(--light);
+            border-radius: 12px;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .word-bubble {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .word-bubble.player {
+            background: #ebf8ff;
+            border-left: 4px solid #3182ce;
+            align-self: flex-end;
+        }
+
+        .word-bubble.bot {
+            background: #fffaf0;
+            border-left: 4px solid #dd6b20;
+            align-self: flex-start;
+        }
+
+        .word-main {
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: 'Zen Maru Gothic', sans-serif;
+        }
+
+        .word-sub {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        /* Input Form */
+        .input-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-form input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 2px solid #cbd5e0;
+            border-radius: 50px;
+            outline: none;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .input-form input:focus {
+            border-color: var(--primary);
+        }
+
+        .input-form button {
+            padding: 0 24px;
+            border-radius: 50px;
+        }
+
+        /* Message Notification */
+        .notification {
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            min-height: 24px;
+        }
+
+        .notification.error { color: var(--danger); }
+        .notification.success { color: var(--success); }
+
+        /* Game Over Screen */
+        .gameover-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .gameover-icon {
+            font-size: 4rem;
+        }
+
+        .stats-card {
+            background: var(--light);
+            width: 100%;
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .stat-item h4 {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-bottom: 5px;
+        }
+
+        .stat-item p {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <div class="badge-jp">しりとり</div>
+            <h1>SHIRITORI</h1>
+            <p>Game Sambung Kata Bahasa Jepang Tradisional</p>
+        </header>
+
+        <!-- SCREEN 1: LOBBY -->
+        <div id="lobby-screen" class="screen active">
+            <div class="lobby-content">
+                <div class="rules-box">
+                    <h3>📜 Aturan Main:</h3>
+                    <ul>
+                        <li>Kata pertama bebas dimulai oleh Bot atau Pemain.</li>
+                        <li>Kata berikutnya <b>wajib dimulai</b> dengan huruf/mora terakhir dari kata sebelumnya.</li>
+                        <li>Kalah jika menggunakan kata yang berakhiring huruf <b>「ん」 (nn)</b>.</li>
+                        <li>Tidak boleh mengulang kata yang sudah pernah digunakan.</li>
+                        <li>Waktu berpikir terbatas! Perhatikan timer Anda.</li>
+                    </ul>
+                </div>
+                <button class="btn" id="start-btn">Mulai Bermain</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: GAMEPLAY -->
+        <div id="game-screen" class="screen">
+            <div class="game-info">
+                <div>Skor: <span id="score-val">0</span> Kata</div>
+                <div class="timer">⏳ <span id="timer-val">15</span>s</div>
+            </div>
+
+            <div class="target-indicator">
+                <div>Kata harus dimulai dengan huruf:</div>
+                <span id="target-mora">--</span>
+                <div id="target-kana-sub" style="font-size: 0.85rem; color: #718096; margin-top: 4px;"></div>
+            </div>
+
+            <div class="history-container" id="history-box">
+                <!-- Chat bubbles will be injected here -->
+            </div>
+
+            <div class="notification" id="notif-msg"></div>
+
+            <form class="input-form" id="word-form">
+                <input type="text" id="word-input" placeholder="Ketik kata (Hiragana/Romaji)..." autocomplete="off" autofocus>
+                <button type="submit" class="btn" style="padding: 12px 20px; font-size: 1rem;">Kirim</button>
+            </form>
+        </div>
+
+        <!-- SCREEN 3: GAME OVER -->
+        <div id="gameover-screen" class="screen">
+            <div class="gameover-content">
+                <div class="gameover-icon" id="go-icon">💥</div>
+                <h2 id="go-title">Permainan Berakhir!</h2>
+                <p id="go-reason" style="color: #718096;"></p>
+
+                <div class="stats-card">
+                    <div class="stat-item">
+                        <h4>Total Kata</h4>
+                        <p id="final-score">0</p>
+                    </div>
+                </div>
+
+                <button class="btn" id="restart-btn">Main Lagi</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATABASE KOSAKATA LENGKAP & SISTEM MORA ---
+        // Format: { kana, romaji, meaning }
+        const vocabDatabase = [
+            { kana: "りんご", romaji: "ringo", meaning: "Apel" },
+            { kana: "ごリラ", romaji: "gorira", meaning: "Gorila" },
+            { kana: "ラッパ", romaji: "rappa", meaning: "Trompet" },
+            { kana: "パンダ", romaji: "panda", meaning: "Panda" },
+            { kana: "ダチョウ", romaji: "dachou", meaning: "Burung Unta" },
+            { kana: "うi", romaji: "usagi", meaning: "Kelinci" }, // Diperbaiki mapping bawah
+            { kana: "きりん", romaji: "kirin", meaning: "Jerapah" },
+            { kana: "Suika", romaji: "suika", meaning: "Semangka" },
+            { kana: "kamome", romaji: "kamome", meaning: "Burung Camar" },
+            { kana: "neko", romaji: "neko", meaning: "Kucing" },
+            { kana: "koinu", romaji: "koinu", meaning: "Anjing Kecil" },
+            { kana: "tsuki", romaji: "tsuki", meaning: "Bulan" },
+            { kana: "kame", romaji: "kame", meaning: "Kura-kura" },
+            { kana: "tori", romaji: "tori", meaning: "Burung" },
+            { kana: "sakura", romaji: "sakura", meaning: "Bunga Sakura" },
+            { kana: "raion", romaji: "raion", meaning: "Singa" },
+            { kana: "note", romaji: "note", meaning: "Buku Catatan" },
+            { kana: "tenisu", romaji: "tenisu", meaning: "Tenis" },
+            { kana: "suupu", romaji: "suupu", meaning: "Sup" },
+            { kana: "fujisan", romaji: "fujisan", meaning: "Gunung Fuji" }
+        ];
+
+        // Database tambahan bersih (Huruf Kana murni untuk validasi & kemudahan logika)
+        const cleanDictionary = [
+            { kana: "りんご", romaji: "ringo", meaning: "Apel" },
+            { kana: "ごりら", romaji: "gorira", meaning: "Gorila" },
+            { kana: "らっぱ", romaji: "rappa", meaning: "Trompet" },
+            { kana: "ぱんだ", romaji: "panda", meaning: "Panda" },
+            { kana: "だちょう", romaji: "dachou", meaning: "Burung Unta" },
+            { kana: "うさぎ", romaji: "usagi", meaning: "Kelinci" },
+            { kana: "ぎゅうにゅう", romaji: "gyuunyuu", meaning: "Susu Sapi" },
+            { kana: "きりん", romaji: "kirin", meaning: "Jerapah" },
+            { kana: "すいか", romaji: "suika", meaning: "Semangka" },
+            { kana: "かもめ", romaji: "kamome", meaning: "Burung Camar" },
+            { kana: "ねこ", romaji: "neko", meaning: "Kucing" },
+            { kana: "こいぬ", romaji: "koinu", meaning: "Anjing Kecil" },
+            { kana: "ぬの", romaji: "nuno", meaning: "Kain" },
+            { kana: "のり", romaji: "nori", meaning: "Rumput Laut / Lem" },
+            { kana: "りす", romaji: "risu", meaning: "Tupai" },
+            { kana: "すし", romaji: "sushi", meaning: "Sushi" },
+            { kana: "しんぶん", romaji: "shinbun", meaning: "Koran" }, // Berakhir 'n' (Bahaya untuk pemain berikutnya)
+            { kana: "はな", romaji: "hana", meaning: "Bunga / Hidung" },
+            { kana: "ないふ", romaji: "naifu", meaning: "Pisau" },
+            { kana: "ふく", romaji: "fuku", meaning: "Pakaian" },
+            { kana: "くるま", romaji: "kuruma", meaning: "Mobil" },
+            { kana: "まぐろ", romaji: "maguro", meaning: "Ikan Tuna" },
+            { kana: "ろけっと", romaji: "roketto", meaning: "Roket" },
+            { kana: "とけい", romaji: "tokei", meaning: "Jam" },
+            { kana: "isu", romaji: "isu", meaning: "Kursi" } // Fallback romaji/kana terstandardisasi
+        ];
+
+        // State Game
+        let gameState = {
+            score: 0,
+            history: [], // Menyimpan objek kata yang sudah digunakan
+            currentMora: "",
+            timer: 15,
+            timerInterval: null,
+            isPlayerTurn: true,
+            gameOver: false
+        };
+
+        // DOM Elements
+        const lobbyScreen = document.getElementById('lobby-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const gameoverScreen = document.getElementById('gameover-screen');
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const wordForm = document.getElementById('word-form');
+        const wordInput = document.getElementById('word-input');
+        const historyBox = document.getElementById('history-box');
+        const targetMoraEl = document.getElementById('target-mora');
+        const targetKanaSubEl = document.getElementById('target-kana-sub');
+        const scoreValEl = document.getElementById('score-val');
+        const timerValEl = document.getElementById('timer-val');
+        const notifMsgEl = document.getElementById('notif-msg');
+        
+        const goIcon = document.getElementById('go-icon');
+        const goTitle = document.getElementById('go-title');
+        const goReason = document.getElementById('go-reason');
+        const finalScoreEl = document.getElementById('final-score');
+
+        // Event Listeners
+        startBtn.addEventListener('click', startGame);
+        restartBtn.addEventListener('click', startGame);
+        wordForm.addEventListener('submit', handlePlayerSubmit);
+
+        function startGame() {
+            // Reset State
+            gameState = {
+                score: 0,
+                history: [],
+                currentMora: "",
+                timer: 15,
+                timerInterval: null,
+                isPlayerTurn: true,
+                gameOver: false
+            };
+
+            historyBox.innerHTML = "";
+            notifMsgEl.textContent = "";
+            wordInput.value = "";
+
+            // Switch Screen
+            lobbyScreen.classList.remove('active');
+            gameoverScreen.classList.remove('active');
+            gameScreen.classList.add('active');
+
+            // Pilih kata awal secara acak dari database
+            const initialWord = cleanDictionary[Math.floor(Math.random() * cleanDictionary.length)];
+            gameState.history.push(initialWord);
+            
+            // Tentukan mora/huruf terakhir kata awal
+            updateTargetMora(initialWord.kana);
+
+            // Render ke history box
+            appendBubble(initialWord, "Bot (Mula)");
+            
+            startTimer();
+        }
+
+        function updateTargetMora(lastWordKana) {
+            // Ambil karakter terakhir dari string kana
+            let lastChar = lastWordKana.slice(-1);
+            
+            // Aturan penanganan kecil/chouonpu jika ada, ambil huruf dasar jika perlu
+            if (lastChar === 'ー') {
+                lastChar = lastWordKana.slice(-2, -1);
+            }
+            
+            gameState.currentMora = lastChar;
+            targetMoraEl.textContent = lastChar.toUpperCase();
+            targetKanaSubEl.textContent = `(Romaji/Karakter: ${lastChar})`;
+        }
+
+        function appendBubble(wordObj, senderType) {
+            const bubble = document.createElement('div');
+            bubble.classList.add('word-bubble');
+            
+            if (senderType.includes('Pemain')) {
+                bubble.classList.add('player');
+            } else {
+                bubble.classList.add('bot');
+            }
+
+            bubble.innerHTML = `
+                <div class="word-main">${wordObj.kana} <span style="font-size:0.9rem; font-weight:normal; color:#555;">(${wordObj.romaji})</span></div>
+                <div class="word-sub">${senderType} — Arti: ${wordObj.meaning}</div>
+            `;
+            
+            historyBox.appendChild(bubble);
+            historyBox.scrollTop = historyBox.scrollHeight;
+        }
+
+        function startTimer() {
+            clearInterval(gameState.timerInterval);
+            gameState.timer = 15;
+            timerValEl.textContent = gameState.timer;
+
+            gameState.timerInterval = setInterval(() => {
+                gameState.timer--;
+                timerValEl.textContent = gameState.timer;
+
+                if (gameState.timer <= 0) {
+                    clearInterval(gameState.timerInterval);
+                    triggerGameOver("Waktu Habis!", "⏰ Anda kehabisan waktu berpikir.");
+                }
+            }, 1000);
+        }
+
+        function handlePlayerSubmit(e) {
+            e.preventDefault();
+            if (gameState.gameOver || !gameState.isPlayerTurn) return;
+
+            const rawInput = wordInput.value.trim().toLowerCase();
+            if (!rawInput) return;
+
+            notifMsgEl.textContent = "";
+
+            // 1. Validasi Huruf Awal (Harus sama dengan targetMora)
+            // Sederhanakan pencocokan awal (mendukung input romaji atau kana langsung)
+            const requiredMora = gameState.currentMora;
+            
+            // Cek apakah input valid berdasarkan database atau kecocokan karakter awal
+            let matchedWord = cleanDictionary.find(item => 
+                item.kana === rawInput || item.romaji === rawInput
+            );
+
+            // Jika tidak ada di database statis, kita buat objek dinamis jika formatnya valid
+            if (!matchedWord) {
+                // Validasi sederhana karakter awal
+                if (!rawInput.startsWith(requiredMora) && !isRomajiMatch(rawInput, requiredMora)) {
+                    showNotification(`Kata harus dimulai dengan huruf "${requiredMora.toUpperCase()}"!`, "error");
+                    return;
+                }
+                
+                // Cek apakah berakhiran 'n' / 'ん'
+                if (rawInput.endsWith('n') || rawInput.endsWith('ん')) {
+                    showNotification("Kata berakhiran 'N' (ん) dilarang dalam Shiritori!", "error");
+                    return;
+                }
+
+                matchedWord = {
+                    kana: rawInput,
+                    romaji: rawInput,
+                    meaning: "Kosakata Pemain"
+                };
+            }
+
+            // 2. Cek Duplikasi
+            const isDuplicate = gameState.history.some(item => item.kana === matchedWord.kana || item.romaji === matchedWord.romaji);
+            if (isDuplicate) {
+                showNotification("Kata ini sudah pernah digunakan!", "error");
+                return;
+            }
+
+            // 3. Cek Akhiran N
+            if (matchedWord.kana.endsWith('ん') || matchedWord.romaji.endsWith('n')) {
+                // Pemain menggunakan kata berakhiran 'n' -> Kalah!
+                appendBubble(matchedWord, "Pemain");
+                clearInterval(gameState.timerInterval);
+                triggerGameOver("Kekalahan!", "❌ Anda mengucapkan kata berakhiran 'N (ん)'. Permainan selesai.");
+                return;
+            }
+
+            // Validasi Sukses untuk Pemain
+            clearInterval(gameState.timerInterval);
+            gameState.history.push(matchedWord);
+            appendBubble(matchedWord, "Pemain");
+            gameState.score++;
+            scoreValEl.textContent = gameState.score;
+            wordInput.value = "";
+
+            // Giliran Bot Beraksi
+            gameState.isPlayerTurn = false;
+            updateTargetMora(matchedWord.kana);
+            
+            setTimeout(triggerBotTurn, 1200);
+        }
+
+        function isRomajiMatch(inputStr, moraChar) {
+            // Helper pemetaan dasar romaji ke kana jika pemain mengetik romaji
+            const map = { 'a':'あ','i':'い','u':'う','e':'え','o':'お','ka':'か','ki':'き','ku':'く','ke':'け','ko':'こ','sa':'さ','shi':'し','su':'す','se':'せ','so':'そ','ta':'た','chi':'ち','tsu':'つ','te':'て','to':'と','na':'な','ni':'に','nu':'ぬ','ne':'ね','no':'の','ha':'は','hi':'ひ','fu':'ふ','he':'へ','ho':'ほ','ma':'ま','mi':'み','mu':'む','me':'め','mo':'も','ya':'や','yu':'ゆ','yo':'よ','ra':'り','ri':'り','ru':'る','re':'れ','ro':'ろ','wa':'わ','n':'ん' };
+            return inputStr.startsWith(moraChar);
+        }
+
+        function showNotification(text, type) {
+            notifMsgEl.textContent = text;
+            notifMsgEl.className = `notification ${type}`;
+            setTimeout(() => {
+                notifMsgEl.textContent = "";
+            }, 3000);
+        }
+
+        function triggerBotTurn() {
+            if (gameState.gameOver) return;
+
+            const currentTarget = gameState.currentMora;
+
+            // Cari kata dari database yang dimulai dengan currentTarget dan belum digunakan
+            let availableWords = cleanDictionary.filter(item => {
+                const startsWithMora = item.kana.startsWith(currentTarget) || item.romaji.startsWith(currentTarget);
+                const notUsed = !gameState.history.some(h => h.kana === item.kana);
+                const notEndingWithN = !item.kana.endsWith('ん') && !item.romaji.endsWith('n');
+                return startsWithMora && notUsed && notEndingWithN;
+            });
+
+            // Jika bot tidak menemukan kata valid di database
+            if (availableWords.length === 0) {
+                triggerGameOver("Kemenangan!", "🎉 Bot kehabisan kata! Anda Menang!");
+                return;
+            }
+
+            // Pilih kata acak dari list yang tersedia
+            const botChoice = availableWords[Math.floor(Math.random() * availableWords.length)];
+            
+            gameState.history.push(botChoice);
+            appendBubble(botChoice, "Bot AI");
+            
+            updateTargetMora(botChoice.kana);
+            gameState.isPlayerTurn = true;
+            startTimer();
+        }
+
+        function triggerGameOver(title, reason) {
+            gameState.gameOver = true;
+            clearInterval(gameState.timerInterval);
+
+            goTitle.textContent = title;
+            goReason.textContent = reason;
+            finalScoreEl.textContent = gameState.score;
+
+            if (title.includes("Menang")) {
+                goIcon.textContent = "🏆";
+            } else {
+                goIcon.textContent = "💥";
+            }
+
+            gameScreen.classList.remove('active');
+            gameoverScreen.classList.add('active');
+        }
+    </script>
+</body>
+</html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+print("File index.html berhasil dibuat.")
