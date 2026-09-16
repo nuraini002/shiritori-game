@@ -3,280 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Shiritori Hiragana - Romaji</title>
+    <title>Shiritori Japanese Mora Edition</title>
     <style>
+        :root {
+            --bg-color: #0b0f19;
+            --panel-bg: #161f30;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --neon-green: #10b981;
+            --neon-red: #ef4444;
+            --text-main: #f3f4f6;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f7fee7;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
-        }
-        .game-container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            width: 100%;
-            max-width: 420px;
-            text-align: center;
-            border: 3px solid #65a30d;
-        }
-        h1 {
-            color: #3f6212;
-            margin-bottom: 5px;
-            font-size: 28px;
-        }
-        .rule {
-            font-size: 14px;
-            color: #4d7c0f;
-            margin-bottom: 20px;
-            background-color: #ecfccb;
-            padding: 8px;
-            border-radius: 8px;
-        }
-        .word-display {
-            background-color: #f0fdf4;
-            color: #16a34a;
-            font-size: 36px;
-            font-weight: bold;
             padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 5px;
-            border: 2px solid #bbf7d0;
+            box-sizing: border-box;
         }
-        .romaji-hint {
-            font-size: 16px;
-            color: #666;
+
+        .game-card {
+            background-color: var(--panel-bg);
+            border: 2px solid #24324d;
+            border-radius: 24px;
+            padding: 35px;
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .screen { display: none; }
+        .screen.active { display: block; animation: smoothShow 0.4s ease-out; }
+
+        h1 {
+            font-size: 32px;
             margin-bottom: 20px;
+            background: linear-gradient(45deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .rules-container {
+            text-align: left;
+            background-color: #0f1624;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid #1e293b;
+            margin-bottom: 30px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #9ca3af;
+        }
+        .rules-container ul { padding-left: 20px; margin: 10px 0 0 0; }
+        .rules-container li { margin-bottom: 8px; }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .hearts { font-size: 22px; letter-spacing: 4px; }
+        .score-box {
+            background: #2563eb;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .word-bubble {
+            background: linear-gradient(135deg, #1e1b4b 0%, #111827 100%);
+            border: 2px solid var(--accent-purple);
+            border-radius: 20px;
+            padding: 30px 20px;
+            margin-bottom: 25px;
+            box-shadow: inset 0 0 20px rgba(139, 92, 246, 0.2);
+        }
+        .japa-text {
+            font-size: 56px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #ffffff;
+            margin: 0;
+            text-shadow: 0 0 15px rgba(167, 139, 250, 0.6);
+        }
+        .roma-text {
+            font-size: 20px;
+            color: #9ca3af;
+            margin-top: 8px;
             font-style: italic;
         }
-        .input-group {
+        .roma-text b { color: #f59e0b; text-decoration: underline; font-size: 22px; }
+
+        .input-wrapper {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 15px;
         }
         input[type="text"] {
             flex: 1;
-            padding: 12px;
+            background-color: #0f1624;
+            border: 2px solid #24324d;
+            border-radius: 14px;
+            padding: 16px;
+            color: white;
             font-size: 16px;
-            border: 2px solid #cbd5e1;
-            border-radius: 8px;
             outline: none;
+            transition: border-color 0.2s;
         }
-        input[type="text"]:focus {
-            border-color: #65a30d;
-        }
+        input[type="text"]:focus { border-color: var(--accent-blue); }
+        
         button {
-            padding: 12px 20px;
-            background-color: #65a30d;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 14px;
+            padding: 16px 28px;
             font-size: 16px;
-            cursor: pointer;
             font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
         }
-        button:hover {
-            background-color: #4d7c0f;
-        }
-        .message {
-            font-size: 14px;
-            margin-bottom: 15px;
-            height: 20px;
-            font-weight: 500;
-        }
-        .error { color: #dc2626; }
-        .success { color: #16a34a; }
-        .stats {
-            display: flex;
-            justify-content: space-between;
+        button:hover { opacity: 0.9; }
+        button:active { transform: scale(0.98); }
+        .btn-large { width: 100%; margin-top: 10px; }
+
+        .target-box {
+            background-color: #0f1624;
+            padding: 12px;
+            border-radius: 12px;
             font-size: 15px;
-            color: #334155;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 15px;
-            margin-top: 15px;
-        }
-        .history {
+            margin-bottom: 20px;
+            border-left: 4px solid #f59e0b;
             text-align: left;
-            max-height: 80px;
+        }
+
+        .history-pane {
+            text-align: left;
+            font-size: 12px;
+            color: #6b7280;
+            max-height: 60px;
             overflow-y: auto;
-            font-size: 13px;
-            color: #64748b;
-            background: #f8fafc;
+            background: #0b0f19;
             padding: 10px;
-            border-radius: 6px;
-            margin-top: 10px;
+            border-radius: 8px;
+        }
+
+        .flash-success { animation: visualSuccess 0.4s ease-out; }
+        .flash-fail { animation: visualFail 0.4s ease-out; }
+
+        @keyframes smoothShow {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes visualSuccess {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+            50% { background-color: #064e3b; }
+            100% { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); }
+        }
+        @keyframes visualFail {
+            0% { transform: translateX(-6px); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+            25% { transform: translateX(6px); }
+            50% { transform: translateX(-6px); background-color: #7f1d1d; }
+            75% { transform: translateX(6px); }
+            100% { transform: translateX(0); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
         }
     </style>
 </head>
 <body>
 
-<div class="game-container">
-    <h1>しりとり (Shiritori)</h1>
-    <p class="rule">Soal pakai Hiragana, Jawab pakai huruf Latin biasa!</p>
-    
-    <div class="word-display" id="currentWord">しりとり</div>
-    <div class="romaji-hint" id="romajiHint">(shiritor<b>i</b>)</div>
-    
-    <div class="input-group">
-        <input type="text" id="wordInput" placeholder="Ketik jawaban romaji/latin..." autocomplete="off">
-        <button onclick="submitWord()">Kirim</button>
-    </div>
-    
-    <div id="message" class="message"></div>
-    
-    <div class="stats">
-        <div>Skor: <span id="score">0</span></div>
-        <div>Huruf Depan Harus: <strong id="nextLetter" style="color:#65a30d; font-size:18px;">I</strong></div>
+<div class="game-card" id="mainContainer">
+
+    <!-- 1. SCREEN RULES -->
+    <div id="viewRules" class="screen active">
+        <h1>しりとり (Shiritori)</h1>
+        <div class="rules-container">
+            <strong>Aturan Permainan Resmi:</strong>
+            <ul>
+                <li>Sambung kata berdasarkan <b>Suku Kata Jepang</b> terakhir.</li>
+                <li>Contoh: ne<b>ko</b> &rarr; diakhiri suku kata ganda, wajib jawab awalan <b>ko</b> (contoh: <i>koma</i>).</li>
+                <li>Contoh: a-o-<b>i</b> &rarr; diakhiri vokal tunggal saja, wajib jawab awalan <b>i</b> (contoh: <i>inu</i>).</li>
+                <li><b>DILARANG</b> mengetik kata asal-asalan abjad (harus ejaan Jepang Romaji yang sah).</li>
+                <li><b>DILARANG</b> menggunakan kata berakhiran huruf <b>"n"</b> (contoh: <i>mikan</i>) karena otomatis kalah.</li>
+                <li>Maksimal salah/gagal: <b>3 Kali Nyawa</b>.</li>
+            </ul>
+        </div>
+        <button class="btn-large" onclick="initiateGame()">Mulai Game</button>
     </div>
 
-    <div class="history" id="historyLog">
-        <strong>Riwayat:</strong> shiritori
+    <!-- 2. SCREEN PLAYING -->
+    <div id="viewGame" class="screen">
+        <div class="game-header">
+            <div class="hearts" id="hpDisplay">❤️❤️❤️</div>
+            <div class="score-box">SKOR: <span id="scoreDisplay">0</span></div>
+        </div>
+
+        <div class="word-bubble">
+            <div class="japa-text" id="viewJapa">ねこ</div>
+            <div class="roma-text" id="viewRoma">ne<b>ko</b></div>
+        </div>
+
+        <div class="target-box">
+            Suku kata berikutnya harus diawali: <strong id="targetHint" style="color: #f59e0b;">KO</strong>
+        </div>
+
+        <div class="input-wrapper">
+            <input type="text" id="playerInput" placeholder="Ketik kelanjutan suku kata..." autocomplete="off">
+            <button onclick="checkPlayerAnswer()">Kirim</button>
+        </div>
+
+        <div class="history-pane" id="historyDisplay">
+            <strong>Riwayat:</strong> neko
+        </div>
     </div>
+
+    <!-- 3. SCREEN GAME OVER -->
+    <div id="viewOver" class="screen">
+        <h1 style="color: var(--neon-red); background: none; -webkit-text-fill-color: initial;">GAME OVER</h1>
+        <p style="color: #6b7280; margin-bottom: 20px;">Nyawa Anda telah habis atau Anda melanggar aturan akhir huruf 'N'.</p>
+        <div style="background: #0f1624; padding: 20px; border-radius: 12px; margin-bottom: 25px;">
+            <span style="font-size: 14px; color: #9ca3af;">Skor Akhir</span>
+            <h2 id="finalScoreDisplay" style="font-size: 42px; margin: 5px 0 0 0; color: #fff;">0</h2>
+        </div>
+        <button class="btn-large" onclick="backToMenu()">Kembali Ke Menu</button>
+    </div>
+
 </div>
 
 <script>
-    // Kamus mini konversi Romaji ke Hiragana dasar untuk validasi & display visual
-    const romajiToHiragana = {
-        'a':'あ','i':'い','u':'う','e':'え','o':'お',
-        'ka':'か','ki':'き','ku':'く','ke':'け','ko':'こ',
-        'sa':'さ','shi':'し','su':'す','se':'せ','so':'そ',
-        'ta':'た','chi':'ち','tsu':'つ','te':'て','to':'と',
-        'na':'な','ni':'に','nu':'ぬ','ne':'ね','no':'の',
-        'ha':'は','hi':'ひ','fu':'ふ','he':'へ','ho':'ほ',
-        'ma':'ま','mi':'み','mu':'む','me':'め','mo':'も',
-        'ya':'や','yu':'ゆ','yo':'よ',
-        'ra':'ら','ri':'り','ru':'る','re':'れ','ro':'ろ',
-        'wa':'わ','wo':'を','n':'ん'
-    };
+    const validMoraList = [
+        'kya', 'kyu', 'kyo', 'sha', 'shu', 'sho', 'cha', 'chu', 'cho', 'nya', 'nyu', 'nyo', 
+        'hya', 'hyu', 'hyo', 'mya', 'myu', 'myo', 'rya', 'ryu', 'ryo', 'gya', 'gyu', 'gyo', 
+        'bya', 'byu', 'byo', 'pya', 'pyu', 'pyo', 'tsu', 'chi', 'shi',
+        'ka', 'ki', 'ku', 'ke', 'ko', 'sa', 'su', 'se', 'so', 'ta', 'te', 'to', 
+        'na', 'ni', 'nu', 'ne', 'no', 'ha', 'hi', 'fu', 'he', 'ho', 'ma', 'mi', 
+        'mu', 'me', 'mo', 'ya', 'yu', 'yo', 'ra', 'ri', 'ru', 're', 'ro', 'wa', 
+        'wo', 'ga', 'gi', 'gu', 'ge', 'go', 'za', 'ji', 'zu', 'ze', 'zo', 'da', 
+        'de', 'do', 'ba', 'bi', 'bu', 'be', 'bo', 'pa', 'pi', 'pu', 'pe', 'po',
+        'a', 'i', 'u', 'e', 'o', 'n'
+    ];
 
-    // State Awal Game
-    let usedWords = ["shiritori"];
-    let currentWordRomaji = "shiritori"; 
-    let score = 0;
-
-    const currentWordEl = document.getElementById("currentWord");
-    const romajiHintEl = document.getElementById("romajiHint");
-    const wordInputEl = document.getElementById("wordInput");
-    const messageEl = document.getElementById("message");
-    const scoreEl = document.getElementById("score");
-    const nextLetterEl = document.getElementById("nextLetter");
-    const historyLogEl = document.getElementById("historyLog");
-
-    // Tangkap tombol Enter
-    wordInputEl.addEventListener("keypress", function(event) {
-        if (event.key === "Enter") {
-            submitWord();
-        }
-    });
-
-    // Fungsi pembantu mengubah teks romaji menjadi teks hiragana visual sederhana
-    function convertToHiraganaDisplay(romaji) {
-        let temp = romaji.toLowerCase();
-        let result = "";
-        let i = 0;
-        
-        while (i < temp.length) {
-            if (i + 3 <= temp.length && romajiToHiragana[temp.substring(i, i + 3)]) {
-                result += romajiToHiragana[temp.substring(i, i + 3)];
-                i += 3;
-            } else if (i + 2 <= temp.length && romajiToHiragana[temp.substring(i, i + 2)]) {
-                result += romajiToHiragana[temp.substring(i, i + 2)];
-                i += 2;
-            } else if (romajiToHiragana[temp.charAt(i)]) {
-                result += romajiToHiragana[temp.charAt(i)];
-                i += 1;
-            } else {
-                result += temp.charAt(i);
-                i += 1;
-            }
-        }
-        return result;
-    }
-
-    function submitWord() {
-        let inputWord = wordInputEl.value.trim().toLowerCase();
-        messageEl.className = "message";
-        messageEl.innerText = "";
-
-        if (inputWord === "") {
-            showMessage("Input tidak boleh kosong!", "error");
-            return;
-        }
-
-        // Aturan Khusus Shiritori Jepang: Tidak boleh berakhiran huruf 'n' (ん) karena game akan langsung mati/kalah
-        if (inputWord.endsWith('n') && !inputWord.endsWith('an') && !inputWord.endsWith('in') && !inputWord.endsWith('un') && !inputWord.endsWith('en') && !inputWord.endsWith('on')) {
-             // Jika murni huruf mati 'n'
-        }
-
-        // Cari huruf terakhir dari kata sebelumnya
-        let requiredLetter = currentWordRomaji.charAt(currentWordRomaji.length - 1);
-        let firstLetter = inputWord.charAt(0);
-
-        // Validasi 1: Huruf awal harus cocok dengan huruf akhir sebelumnya
-        if (firstLetter !== requiredLetter) {
-            showMessage(`Kata harus diawali huruf "${requiredLetter.toUpperCase()}"!`, "error");
-            return;
-        }
-
-        // Validasi 2: Kata tidak boleh duplikat
-        if (usedWords.includes(inputWord)) {
-            showMessage(`Kata "${inputWord}" sudah pernah digunakan!`, "error");
-            return;
-        }
-
-        // Validasi 3: Di permainan Jepang, kata tidak boleh berakhiran huruf 'N' mati (ん)
-        if (inputWord.slice(-1) === 'n' && (inputWord.length === 1 || inputWord.slice(-2, -1) !== 'n')) {
-            showMessage(`Game Over! Kata berakhiran 'N' tidak bisa dilanjutkan dalam Shiritori.`, "error");
-            resetGame();
-            return;
-        }
-
-        // Lolos validasi, update game state
-        usedWords.push(inputWord);
-        currentWordRomaji = inputWord;
-        score += 1;
-
-        // Tampilkan konversi hiragana ke layar utama
-        let hiraganaText = convertToHiraganaDisplay(inputWord);
-        currentWordEl.innerText = hiraganaText;
-        
-        // Tampilkan petunjuk romaji di bawahnya agar pemain tidak bingung
-        let lastChar = inputWord.charAt(inputWord.length - 1);
-        let bodyChar = inputWord.substring(0, inputWord.length - 1);
-        romajiHintEl.innerHTML = `(${bodyChar}<b>${lastChar}</b>)`;
-
-        // Update skor dan huruf berikutnya
-        scoreEl.innerText = score;
-        nextLetterEl.innerText = lastChar.toUpperCase();
-        
-        // Update riwayat teks
-        historyLogEl.innerHTML += `, ${inputWord}`;
-        
-        wordInputEl.value = "";
-        showMessage("Benar! +1 Skor", "success");
-    }
-
-    function showMessage(text, type) {
-        messageEl.innerText = text;
-        messageEl.className = `message ${type}`;
-    }
-
-    function resetGame() {
-        usedWords = ["shiritori"];
-        currentWordRomaji = "shiritori";
-        score = 0;
-        currentWordEl.innerText = "しりとり";
-        romajiHintEl.innerHTML = "(shiritor<b>i</b>)";
-        scoreEl.innerText = score;
-        nextLetterEl.innerText = "I";
-        historyLogEl.innerHTML = "<strong>Riwayat:</strong> shiritori";
-        wordInputEl.value = "";
-    }
-</script>
-
-</body>
-</html>
+    const hiraganaConversionMap = {
+        'a':'あ','i':'い','u':'う','e':'え','o':'お','ka':'か','ki':'き','ku':'く','ke':'け','ko':'こ',
+        'sa':'さ','shi':'し','su':'す','se':'せ','so':'そ','ta':'た','chi':'ち','tsu':'つ','te':'て','to':'と',
+        'na':'な','ni':'に','nu':'ぬ','ne':'ね','no':'の','ha':'は','hi':'ひ','fu':'ふ','he':'へ','ho':'ほ',
+        'ma':'ま','mi':'み','mu':'む','me':'め','mo':'も','ya':'や','yu':'ゆ','yo':'よ','ra':'ら','ri':'り',
+        'ru':'る','re':'れ','ro':'ろ','wa':'わ','wo':'を','n':'ん','ga':'が','gi':'ぎ','gu':'ぐ','ge':'げ',
+        'go':'ご','za':'ざ','ji':'じ','zu':'ず','ze':'ぜ','zo':'ぞ','da':'だ','de':'ど','do':'ど','ba':'ば',
+    
