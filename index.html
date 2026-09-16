@@ -3,267 +3,322 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shiritori Japanese Mora Edition</title>
+    <title>Game Shiritori Jepang - Pastel Teal</title>
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --panel-bg: #161f30;
-            --accent-blue: #3b82f6;
-            --accent-purple: #8b5cf6;
-            --neon-green: #10b981;
-            --neon-red: #ef4444;
-            --text-main: #f3f4f6;
+            --bg-color: #f0f7f6;
+            --main-teal: #a3d2ca;
+            --dark-teal: #5e8b83;
+            --light-teal: #e8f4f2;
+            --white: #ffffff;
+            --danger: #e29797;
+            --text-color: #334e4a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-main);
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
             padding: 20px;
-            box-sizing: border-box;
         }
 
-        .game-card {
-            background-color: var(--panel-bg);
-            border: 2px solid #24324d;
-            border-radius: 24px;
-            padding: 35px;
+        .game-container {
+            background-color: var(--white);
             width: 100%;
-            max-width: 440px;
+            max-width: 500px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(94, 139, 131, 0.15);
+            padding: 30px;
             text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            position: relative;
-            transition: all 0.3s ease;
         }
-
-        /* Screen States */
-        .screen { display: none; }
-        .screen.active { display: block; animation: smoothShow 0.4s ease-out; }
 
         h1 {
-            font-size: 32px;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, #60a5fa, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
+            color: var(--dark-teal);
+            font-size: 28px;
+            margin-bottom: 10px;
         }
 
-        /* Rules Layout */
-        .rules-container {
+        .rules {
+            background-color: var(--light-teal);
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 13px;
             text-align: left;
-            background-color: #0f1624;
-            padding: 20px;
-            border-radius: 16px;
-            border: 1px solid #1e293b;
-            margin-bottom: 30px;
-            font-size: 14px;
-            line-height: 1.6;
-            color: #9ca3af;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            border-left: 4px solid var(--main-teal);
         }
-        .rules-container ul { padding-left: 20px; margin: 10px 0 0 0; }
-        .rules-container li { margin-bottom: 8px; }
 
-        /* Hearts & Score */
-        .game-header {
+        .status-panel {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
-        }
-        .hearts { font-size: 22px; letter-spacing: 4px; }
-        .score-box {
-            background: #2563eb;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 14px;
             font-weight: bold;
         }
 
-        /* Word Visual Display */
-        .word-bubble {
-            background: linear-gradient(135deg, #1e1b4b 0%, #111827 100%);
-            border: 2px solid var(--accent-purple);
-            border-radius: 20px;
-            padding: 30px 20px;
+        .strikes {
+            color: var(--danger);
+            font-size: 18px;
+        }
+
+        .score {
+            background-color: var(--main-teal);
+            color: var(--white);
+            padding: 5px 15px;
+            border-radius: 15px;
+        }
+
+        .word-display {
+            background-color: var(--light-teal);
+            border: 2px dashed var(--main-teal);
+            border-radius: 15px;
+            padding: 25px;
             margin-bottom: 25px;
-            box-shadow: inset 0 0 20px rgba(139, 92, 246, 0.2);
-        }
-        .japa-text {
-            font-size: 56px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            color: #ffffff;
-            margin: 0;
-            text-shadow: 0 0 15px rgba(167, 139, 250, 0.6);
-        }
-        .roma-text {
-            font-size: 20px;
-            color: #9ca3af;
-            margin-top: 8px;
-            font-style: italic;
-        }
-        .roma-text b { color: #f59e0b; text-decoration: underline; font-size: 22px; }
-
-        /* Input Controls */
-        .input-wrapper {
+            min-height: 120px;
             display: flex;
-            gap: 12px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .current-japanese {
+            font-size: 42px;
+            font-weight: bold;
+            color: var(--dark-teal);
+            margin-bottom: 5px;
+        }
+
+        .current-romaji {
+            font-size: 16px;
+            color: #7fa9a3;
+            letter-spacing: 1px;
+        }
+
+        .requirement-box {
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: var(--dark-teal);
+            font-weight: 600;
+        }
+
+        .requirement-box span {
+            background-color: var(--main-teal);
+            color: var(--white);
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
             margin-bottom: 15px;
         }
+
         input[type="text"] {
             flex: 1;
-            background-color: #0f1624;
-            border: 2px solid #24324d;
-            border-radius: 14px;
-            padding: 16px;
-            color: white;
+            padding: 12px 20px;
+            border: 2px solid var(--main-teal);
+            border-radius: 10px;
             font-size: 16px;
+            color: var(--text-color);
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.3s ease;
         }
-        input[type="text"]:focus { border-color: var(--accent-blue); }
-        
+
+        input[type="text"]:focus {
+            border-color: var(--dark-teal);
+            box-shadow: 0 0 8px rgba(94, 139, 131, 0.2);
+        }
+
         button {
-            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
-            color: white;
+            background-color: var(--dark-teal);
+            color: var(--white);
             border: none;
-            border-radius: 14px;
-            padding: 16px 28px;
+            padding: 12px 25px;
+            border-radius: 10px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.1s, opacity 0.2s;
-        }
-        button:hover { opacity: 0.9; }
-        button:active { transform: scale(0.98); }
-        .btn-large { width: 100%; margin-top: 10px; }
-
-        /* Info & Target Box */
-        .target-box {
-            background-color: #0f1624;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 15px;
-            margin-bottom: 20px;
-            border-left: 4px solid #f59e0b;
-            text-align: left;
+            transition: background-color 0.2s;
         }
 
-        .history-pane {
+        button:hover {
+            background-color: #4a726b;
+        }
+
+        .message {
+            font-size: 14px;
+            min-height: 20px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .message.error { color: var(--danger); }
+        .message.success { color: var(--dark-teal); }
+
+        .history-box {
+            border-top: 1px solid var(--light-teal);
+            padding-top: 15px;
             text-align: left;
-            font-size: 12px;
-            color: #6b7280;
-            max-height: 60px;
+            max-height: 120px;
             overflow-y: auto;
-            background: #0b0f19;
-            padding: 10px;
-            border-radius: 8px;
         }
 
-        /* Animation Feedback System */
-        .flash-success { animation: visualSuccess 0.4s ease-out; }
-        .flash-fail { animation: visualFail 0.4s ease-out; }
+        .history-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #9cbab5;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
 
-        @keyframes smoothShow {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            list-style: none;
         }
-        @keyframes visualSuccess {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
-            50% { background-color: #064e3b; }
-            100% { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); }
+
+        .history-item {
+            background-color: var(--light-teal);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 13px;
         }
-        @keyframes visualFail {
-            0% { transform: translateX(-6px); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
-            25% { transform: translateX(6px); }
-            50% { transform: translateX(-6px); background-color: #7f1d1d; }
-            75% { transform: translateX(6px); }
-            100% { transform: translateX(0); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+
+        /* Modal Game Over */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(51, 78, 74, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .modal {
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .modal h2 {
+            color: var(--danger);
+            margin-bottom: 15px;
+        }
+
+        .modal p {
+            margin-bottom: 20px;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
 
-<div class="game-card" id="mainContainer">
+    <div class="game-container">
+        <h1>しりとり Shiritori</h1>
+        <div class="rules">
+            <strong>Aturan main:</strong> Lanjutkan kata dengan 2 huruf terakhir (e.g., neko &rarr; ko). Jika huruf terakhir adalah vokal tunggal atau huruf 'n' (e.g., aoi, mikan), maka cukup gunakan 1 huruf terakhir saja. Ketik asal 3x salah = Kalah!
+        </div>
 
-    <!-- 1. SCREEN RULES -->
-    <div id="viewRules" class="screen active">
-        <h1>しりとり (Shiritori)</h1>
-        <div class="rules-container">
-            <strong>Aturan Permainan Resmi:</strong>
-            <ul>
-                <li>Sambung kata berdasarkan <b>Suku Kata Jepang</b> terakhir.</li>
-                <li>Contoh: ne<b>ko</b> &rarr; diakhiri suku kata ganda, wajib jawab awalan <b>ko</b> (contoh: <i>koma</i>).</li>
-                <li>Contoh: a-o-<b>i</b> &rarr; diakhiri vokal tunggal saja, wajib jawab awalan <b>i</b> (contoh: <i>inu</i>).</li>
-                <li><b>DILARANG</b> mengetik kata asal-asalan abjad (harus ejaan Jepang Romaji yang sah).</li>
-                <li><b>DILARANG</b> menggunakan kata berakhiran huruf <b>"n"</b> (contoh: <i>mikan</i>) karena otomatis kalah.</li>
-                <li>Maksimal salah/gagal: <b>3 Kali Nyawa</b>.</li>
+        <div class="status-panel">
+            <div class="score">Skor: <span id="scoreVal">0</span></div>
+            <div class="strikes" id="strikeContainer">❌ Kesempatan: 3</div>
+        </div>
+
+        <div class="word-display">
+            <div class="current-japanese" id="currentJp">ねこ</div>
+            <div class="current-romaji" id="currentRomaji">neko</div>
+        </div>
+
+        <div class="requirement-box">
+            Kata berikutnya harus berawalan Romaji: <span id="reqPrefix">ko</span>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="wordInput" placeholder="Ketik kata dalam Romaji..." autocomplete="off">
+            <button id="submitBtn">Kirim</button>
+        </div>
+
+        <div class="message" id="msgBox"></div>
+
+        <div class="history-box">
+            <div class="history-title">Riwayat Kata</div>
+            <ul class="history-list" id="historyList">
+                <li class="history-item">ねこ (neko)</li>
             </ul>
         </div>
-        <button class="btn-large" onclick="initiateGame()">Mulai Game</button>
     </div>
 
-    <!-- 2. SCREEN PLAYING -->
-    <div id="viewGame" class="screen">
-        <div class="game-header">
-            <div class="hearts" id="hpDisplay">❤️❤️❤️</div>
-            <div class="score-box">SKOR: <span id="scoreDisplay">0</span></div>
-        </div>
-
-        <div class="word-bubble">
-            <div class="japa-text" id="viewJapa">ねこ</div>
-            <div class="roma-text" id="viewRoma">ne<b>ko</b></div>
-        </div>
-
-        <div class="target-box">
-            Suku kata berikutnya harus diawali: <strong id="targetHint" style="color: #f59e0b;">KO</strong>
-        </div>
-
-        <div class="input-wrapper">
-            <input type="text" id="playerInput" placeholder="Ketik kelanjutan suku kata..." autocomplete="off">
-            <button onclick="checkPlayerAnswer()">Kirim</button>
-        </div>
-
-        <div class="history-pane" id="historyDisplay">
-            <strong>Riwayat:</strong> neko
+    <!-- Game Over Modal -->
+    <div class="overlay" id="gameOverOverlay">
+        <div class="modal">
+            <h2>Game Over! 🎮</h2>
+            <p>Anda telah melakukan 3 kesalahan input berturut-turut.</p>
+            <p><strong>Skor Akhir Anda: <span id="finalScore">0</span></strong></p>
+            <button id="restartBtn">Main Lagi</button>
         </div>
     </div>
 
-    <!-- 3. SCREEN GAME OVER -->
-    <div id="viewOver" class="screen">
-        <h1 style="color: var(--neon-red); background: none; -webkit-text-fill-color: initial;">GAME OVER</h1>
-        <p style="color: #6b7280; margin-bottom: 20px;">Nyawa Anda telah habis atau Anda melanggar aturan akhir huruf 'N'.</p>
-        <div style="background: #0f1624; padding: 20px; border-radius: 12px; margin-bottom: 25px;">
-            <span style="font-size: 14px; color: #9ca3af;">Skor Akhir</span>
-            <h2 id="finalScoreDisplay" style="font-size: 42px; margin: 5px 0 0 0; color: #fff;">0</h2>
-        </div>
-        <button class="btn-large" onclick="backToMenu()">Kembali Ke Menu</button>
-    </div>
+    <script>
+        // Mapping Romaji ke Hiragana sederhana untuk validasi kosakatanya
+        const romajiToHiragana = {
+            'a':'あ','i':'い','u':'う','e':'え','o':'お',
+            'ka':'か','ki':'き','ku':'く','ke':'け','ko':'こ',
+            'sa':'さ','shi':'し','su':'す','se':'せ','so':'そ',
+            'ta':'た','chi':'ち','tsu':'つ','te':'て','to':'と',
+            'na':'な','ni':'に','nu':'ぬ','ne':'ね','no':'の',
+            'ha':'は','hi':'ひ','fu':'ふ','he':'へ','ho':'ほ',
+            'ma':'ま','mi':'み','mu':'む','me':'め','mo':'も',
+            'ya':'や','yu':'ゆ','yo':'よ',
+            'ra':'ら','ri':'り','ru':'る','re':'れ','ro':'ろ',
+            'wa':'わ','wo':'を','n':'ん',
+            'ga':'が','gi':'ぎ','gu':'ぐ','ge':'げ','go':'ご',
+            'za':'ざ','ji':'じ','zu':'ず','ze':'ぜ','zo':'ぞ',
+            'da':'だ','de':'で','do':'ど',
+            'ba':'ば','bi':'び','bu':'ぶ','be':'べ','bo':'ぼ',
+            'pa':'ぱ','pi':'ぴ','pu':'pu','pe':'ぺ','po':'ぽ'
+        };
 
-</div>
+        // Bank data kosakata Jepang buatan sebagai validasi kata asli
+        // Dalam game nyata, database ini bisa diperluas sebanyak mungkin
+        const japaneseDictionary = [
+            "neko", "koma", "machi", "chiba", "bako", "koneko", "kuma", "maru", "ringo", "gohan",
+            "aoi", "inu", "numa", "mikan", "ninja", "sakura", "raku", "kuruma", "matsuri", "riki",
+            "asahi", "hiragana", "natsu", "tsuki", "kita", "tabemono", "nomimono", "nohohon"
+        ];
 
-<script>
-    // Master data pemisahan Suku Kata (Mora) Bahasa Jepang yang valid
-    const validMoraList = [
-        'kya', 'kyu', 'kyo', 'sha', 'shu', 'sho', 'cha', 'chu', 'cho', 'nya', 'nyu', 'nyo', 
-        'hya', 'hyu', 'hyo', 'mya', 'myu', 'myo', 'rya', 'ryu', 'ryo', 'gya', 'gyu', 'gyo', 
-        'bya', 'byu', 'byo', 'pya', 'pyu', 'pyo', 'tsu', 'chi', 'shi',
-        'ka', 'ki', 'ku', 'ke', 'ko', 'sa', 'su', 'se', 'so', 'ta', 'te', 'to', 
-        'na', 'ni', 'nu', 'ne', 'no', 'ha', 'hi', 'fu', 'he', 'ho', 'ma', 'mi', 
-        'mu', 'me', 'mo', 'ya', 'yu', 'yo', 'ra', 'ri', 'ru', 're', 'ro', 'wa', 
-        'wo', 'ga', 'gi', 'gu', 'ge', 'go', 'za', 'ji', 'zu', 'ze', 'zo', 'da', 
-        'de', 'do', 'ba', 'bi', 'bu', 'be', 'bo', 'pa', 'pi', 'pu', 'pe', 'po',
-        'a', 'i', 'u', 'e', 'o', 'n'
-    ];
+        let currentWord = "neko";
+        let score = 0;
+        let strikes = 3;
+        let usedWords = ["neko"];
+        let requiredPrefix = "ko";
 
-    const hiraganaConversionMap = {
-        'a':'あ','i':'い','u':'う','e':'え','o':'お','ka':'か','ki':'き','ku':'く','ke':'け','ko':'こ',
-        'sa':'さ','shi':'し','su':'す','se':'せ','so':'そ','ta':'た','chi':'ち','tsu':'つ','te':'て','to':'と',
-        'na':'な','ni':'に','nu':'ぬ','ne':'ね','no':'の','ha':'は','hi':'ひ','fu':'ふ','he':'へ','ho':'ほ',
-    
+        const wordInput = document.getElementById('wordInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const currentJp = document.getElementById('currentJp');
+        const currentRomaji = document.getElementById('currentRomaji');
+        const reqPrefix = document.getElementById('reqPrefix');
+        const msgBox = document.getElementById('msgBox');
+        const scoreVal = document.getElementById('scoreVal');
+        const strikeContainer = document.getElementById('strikeContainer');
+        const historyList = document.getElementById('historyList');
+        const gameOverOverlay = document.getElementById('gameOverOverlay');
+        
