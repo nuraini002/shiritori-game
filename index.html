@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Shiritori</title>
+    <title>Game Shiritori — Edisi Kamus Lengkap</title>
     <style>
         * {
             margin: 0;
@@ -12,8 +12,20 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        :root {
+            --teal-light: #b2f7ef;
+            --teal-main: #60d5c7;
+            --teal-dark: #38b0a0;
+            --teal-darker: #2a8a7c;
+            --bg-soft: #e6fffa;
+            --text-dark: #1e4e47;
+            --white: #ffffff;
+            --error: #ff8a8a;
+            --success: #86efac;
+        }
+
         body {
-            background-color: #e6f7f2;
+            background-color: var(--bg-soft);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -22,444 +34,364 @@
         }
 
         .game-container {
-            background-color: #ffffff;
+            background: var(--white);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 8px 32px rgba(100, 200, 180, 0.2);
-            max-width: 600px;
+            max-width: 550px;
             width: 100%;
-            border: 3px solid #b2e8d6;
+            box-shadow: 0 8px 32px rgba(56, 176, 160, 0.15);
+            border: 3px solid var(--teal-light);
         }
 
         h1 {
-            color: #2c8c6e;
             text-align: center;
-            margin-bottom: 20px;
-            font-size: 2rem;
+            color: var(--teal-darker);
+            margin-bottom: 10px;
+            font-size: 1.8rem;
         }
 
-        .rules {
-            background-color: #e0f5ed;
+        .rules-box {
+            background: var(--teal-light);
             padding: 15px;
             border-radius: 12px;
             margin-bottom: 20px;
-            color: #24755c;
             font-size: 0.9rem;
+            color: var(--text-dark);
             line-height: 1.5;
         }
 
         .status-bar {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 20px;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .status-item {
-            background-color: #d4f2e7;
-            padding: 10px 15px;
-            border-radius: 10px;
-            color: #1a5f4a;
+            margin-bottom: 15px;
             font-weight: 600;
         }
 
-        .next-hint {
-            background-color: #a8e6cf;
-            padding: 15px;
-            border-radius: 12px;
+        .lives {
+            color: #d63031;
+        }
+
+        .last-word {
+            background: linear-gradient(135deg, var(--teal-main), var(--teal-dark));
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
             text-align: center;
-            margin-bottom: 20px;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            letter-spacing: 4px;
         }
 
-        .next-hint .label {
-            color: #206c54;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-
-        .next-hint .chars {
-            color: #0f4d3a;
-            font-size: 1.8rem;
+        .prefix-hint {
+            text-align: center;
+            font-size: 1.3rem;
+            color: var(--teal-darker);
+            margin-bottom: 15px;
             font-weight: bold;
         }
 
-        .word-history {
-            background-color: #f0faf7;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            min-height: 80px;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-
-        .word-history h3 {
-            color: #2c8c6e;
-            margin-bottom: 10px;
-            font-size: 1rem;
-        }
-
-        .word-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .word-item {
-            background-color: #b2e8d6;
-            padding: 6px 12px;
-            border-radius: 20px;
-            color: #155742;
-            font-weight: 500;
-        }
-
-        .input-area {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        #word-input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 2px solid #b2e8d6;
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 1.1rem;
+            border: 2px solid var(--teal-main);
             border-radius: 10px;
-            font-size: 1rem;
-            color: #1a5f4a;
-            background-color: #f8fffc;
+            margin-bottom: 12px;
+            outline: none;
+            transition: 0.3s;
         }
 
-        #word-input:focus {
-            outline: none;
-            border-color: #5cc9a8;
-            box-shadow: 0 0 0 3px rgba(92, 201, 168, 0.2);
+        input:focus {
+            border-color: var(--teal-darker);
+            box-shadow: 0 0 0 4px rgba(96, 213, 199, 0.25);
         }
 
         button {
-            padding: 12px 25px;
-            background-color: #5cc9a8;
+            width: 100%;
+            padding: 14px;
+            background: var(--teal-dark);
             color: white;
             border: none;
             border-radius: 10px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: 0.3s;
         }
 
         button:hover {
-            background-color: #3daf8c;
-        }
-
-        button:disabled {
-            background-color: #a8d9c9;
-            cursor: not-allowed;
+            background: var(--teal-darker);
+            transform: translateY(-2px);
         }
 
         .message {
-            padding: 15px;
-            border-radius: 12px;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 10px;
             text-align: center;
-            font-weight: 500;
-            margin-bottom: 15px;
+            font-weight: 600;
             display: none;
         }
 
         .message.success {
-            background-color: #d4edda;
+            background: #d4edda;
             color: #155724;
-            border: 1px solid #c3e6cb;
+            display: block;
         }
 
         .message.error {
-            background-color: #f8d7da;
+            background: #f8d7da;
             color: #721c24;
-            border: 1px solid #f5c6cb;
+            display: block;
         }
 
-        .message.info {
-            background-color: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
+        .history {
+            margin-top: 20px;
+        }
+
+        .history h3 {
+            color: var(--teal-darker);
+            margin-bottom: 8px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background: var(--teal-light);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--text-dark);
         }
 
         .game-over {
             text-align: center;
-            padding: 30px;
+            padding: 20px;
             display: none;
         }
 
         .game-over h2 {
-            color: #c0392b;
-            margin-bottom: 20px;
+            color: #d63031;
+            margin-bottom: 15px;
         }
 
-        @media (max-width: 480px) {
-            .game-container {
-                padding: 20px;
-            }
+        .restart-btn {
+            background: #27ae60;
+            margin-top: 10px;
+        }
 
-            .input-area {
-                flex-direction: column;
-            }
-
-            button {
-                width: 100%;
-            }
+        .restart-btn:hover {
+            background: #219653;
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <h1>🎮 Game Shiritori</h1>
+        <h1>🎌 Game Shiritori</h1>
         
-        <div class="rules">
-            <strong>📜 Aturan:</strong><br>
-            • Lanjutkan dari <strong>2 huruf terakhir</strong> (contoh: neko → awalan ko)<br>
-            • Kecuali berakhiran <strong>huruf vokal (a,i,u,e,o) atau n</strong>, lanjutkan dari <strong>1 huruf terakhir</strong><br>
-            • 3x salah = Kalah! Ketik pakai <em>romaji</em>, tampil dalam <em>Hiragana</em>
+        <div class="rules-box">
+            <strong>Aturan Khusus:</strong><br>
+            • Biasanya lanjutkan <b>2 huruf terakhir</b> → neko → ko...<br>
+            • Jika akhiran <b>vokal (a/i/u/e/o) atau n</b>, lanjutkan <b>1 huruf</b> → aoi→i..., mikan→n...<br>
+            • ❌ Kata berakhiran <b>n</b> = kalah!<br>
+            • Ketik pakai <i>romaji</i> → tampil <i>hiragana</i><br>
+            • 3 kali salah = selesai! ❌❌❌
         </div>
 
         <div class="status-bar">
-            <div class="status-item">❌ Kesalahan: <span id="mistakes">0</span>/3</div>
-            <div class="status-item">📝 Kata: <span id="count">0</span></div>
+            <span>Salah: <span class="lives" id="lives">0 / 3</span></span>
+            <span>Skor: <span id="score">0</span></span>
         </div>
 
-        <div class="next-hint">
-            <div class="label">Harus diawali dengan:</div>
-            <div class="chars" id="next-chars">-</div>
+        <div id="game-area">
+            <div class="last-word" id="lastWord">—</div>
+            <div class="prefix-hint" id="prefixHint">Mulai main!</div>
+            
+            <input type="text" id="wordInput" placeholder="Ketik kata pakai romaji..." autocomplete="off">
+            <button id="submitBtn">Kirim ✅</button>
+            
+            <div class="message" id="message"></div>
+
+            <div class="history">
+                <h3>Riwayat Kata:</h3>
+                <div class="history-list" id="historyList"></div>
+            </div>
         </div>
 
-        <div class="message" id="message"></div>
-
-        <div class="word-history">
-            <h3>📚 Riwayat Kata:</h3>
-            <div class="word-list" id="word-list"></div>
-        </div>
-
-        <div class="input-area">
-            <input type="text" id="word-input" placeholder="Ketik kata dalam romaji..." autocomplete="off">
-            <button id="submit-btn">Kirim</button>
-        </div>
-
-        <div class="game-over" id="game-over">
+        <div class="game-over" id="gameOver">
             <h2>💀 Permainan Selesai!</h2>
-            <p style="margin-bottom: 20px; color: #666;">Anda melakukan 3 kesalahan berturut-turut.</p>
-            <button id="restart-btn">🔄 Mulai Lagi</button>
+            <p>Skor akhir: <span id="finalScore">0</span></p>
+            <button class="restart-btn" onclick="restartGame()">Main Lagi 🔄</button>
         </div>
     </div>
 
     <script>
-        // Kosakata Jepang: romaji -> hiragana
+        // ==================================================
+        // KAMUS DIPERBANYAK — LEBIH DARI 700 KATA!
+        // ==================================================
         const dictionary = {
-            "neko": "ねこ",
-            "inu": "いぬ",
-            "usagi": "うさぎ",
-            "ki": "き",
-            "kaze": "かぜ",
-            "zou": "ぞう",
-            "ringo": "りんご",
-            "gohan": "ごはん",
-            "nami": "なみ",
-            "mizu": "みず",
-            "aoi": "あおい",
-            "akai": "あかい",
-            "kaki": "かき",
-            "ikura": "いくら",
-            "mikan": "みかん",
-            "neko": "ねこ",
-            "kumo": "くも",
-            "mushi": "むし",
-            "shika": "しか",
-            "kame": "かめ",
-            "medaka": "めだか",
-            "kaze": "かぜ",
-            "zato": "ざと",
-            "tori": "とり",
-            "inu": "いぬ",
-            "uma": "うま",
-            "mimi": "みみ",
-            "minato": "みなと",
-            "tomo": "とも",
-            "momo": "もも",
-            "mono": "もの",
-            "naka": "なか",
-            "kuni": "くに",
-            "ne": "ね",
-            "ko": "こ",
-            "ni": "に",
-            "mi": "み",
-            "shi": "し",
-            "ka": "か",
-            "a": "あ",
-            "i": "い",
-            "u": "う",
-            "e": "え",
-            "o": "お",
-            "n": "ん"
-        };
+            // Hewan
+            'neko': 'ねこ', 'inu': 'いぬ', 'tora': 'とら', 'kuma': 'くま', 'kitsune': 'きつね',
+            'usagi': 'うさぎ', 'saru': 'さる', 'buta': 'ぶた', 'uma': 'うま', 'hitsuji': 'ひつじ',
+            'tori': 'とり', 'suzume': 'すずめ', 'kamo': 'かも', 'sakana': 'さかな', 'tai': 'たい',
+            'ebi': 'えび', 'kani': 'かに', 'tako': 'たこ', 'kai': 'かい', 'kujira': 'くじら',
+            'zou': 'ぞう', 'kirin': 'きりん', 'shika': 'しか', 'kamoshika': 'かもしか', 'nezumi': 'ねずみ',
+            'kaeru': 'かえる', 'hebi': 'へび', 'tatsumaki': 'たつまき', 'ryuu': 'りゅう', 'wani': 'わに',
+            'kamome': 'かもめ', 'hayabusa': 'はやぶさ', 'kiji': 'きじ', 'hotaru': 'ほたる', 'semi': 'せみ',
+            'hachi': 'はち', 'ari': 'あり', 'kumo': 'くも', 'sasori': 'さそり', 'tonbo': 'とんぼ',
+            'mushi': 'むし', 'kera': 'けら', 'koumori': 'こうもり', 'iwashi': 'いわし', 'maguro': 'まぐろ',
+            'sake': 'さけ', 'unagi': 'うなぎ', 'taiyaki': 'たいやき', 'anago': 'あなご', 'fugu': 'ふぐ',
 
-        // Variabel game
-        let usedWords = [];
-        let mistakes = 0;
-        let lastWord = "";
-        let gameActive = true;
+            // Alam & Lingkungan
+            'sora': 'そら', 'tsuki': 'つき', 'hoshi': 'ほし', 'taiyou': 'たいよう', 'kumo': 'くも',
+            'ame': 'あめ', 'yuki': 'ゆき', 'kaze': 'かぜ', 'umi': 'うみ', 'nami': 'なみ',
+            'suna': 'すな', 'ishi': 'いし', 'yama': 'やま', 'kawa': 'かわ', 'mizu': 'みず',
+            'takayama': 'たかやま', 'tani': 'たに', 'mori': 'もり', 'hayashi': 'はやし', 'ki': 'き',
+            'matsu': 'まつ', 'sugi': 'すぎ', 'hinoki': 'ひのき', 'sakura': 'さくら', 'ume': 'うめ',
+            'momo': 'もも', 'yanagi': 'やなぎ', 'kusa': 'くさ', 'hana': 'はな', 'tsubomi': 'つぼみ',
+            'niwa': 'にわ', 'sono': 'その', 'daichi': 'だいち', 'tsuchi': 'つち', 'suna': 'すな',
+            'sekai': 'せかい', 'chikyuu': 'ちきゅう', 'kuni': 'くに', 'machi': 'まち', 'mura': 'むら',
+            'sato': 'さと', 'tokyo': 'とうきょう', 'osaka': 'おおさか', 'kyoto': 'きょうと', 'nara': 'なら',
+            'aichi': 'あいち', 'hokkaido': 'ほっかいどう', 'okinawa': 'おきなわ', 'nihon': 'にほん', 'nippon': 'にっぽん',
+            'asahi': 'あさひ', 'hiru': 'ひる', 'yuuhi': 'ゆうひ', 'yoru': 'よる', 'asa': 'あさ',
+            'ban': 'ばん', 'shunjuu': 'しゅんじゅう', 'haru': 'はる', 'natsu': 'なつ', 'aki': 'あき',
+            'fuyu': 'ふゆ', 'kisetsu': 'きせつ', 'tenki': 'てんき', 'hare': 'はれ', 'kumori': 'くもり',
+            'arashi': 'あらし', 'kaminari': 'かみなり', 'jishin': 'じしん', 'yama': 'やま', 'kegon': 'けごん',
 
-        // Elemen DOM
-        const wordInput = document.getElementById("word-input");
-        const submitBtn = document.getElementById("submit-btn");
-        const restartBtn = document.getElementById("restart-btn");
-        const nextCharsEl = document.getElementById("next-chars");
-        const wordListEl = document.getElementById("word-list");
-        const mistakesEl = document.getElementById("mistakes");
-        const countEl = document.getElementById("count");
-        const messageEl = document.getElementById("message");
-        const gameOverEl = document.getElementById("game-over");
+            // Buah & Tumbuhan
+            'ringo': 'りんご', 'mikan': 'みかん', 'kiui': 'きうい', 'ichigo': 'いちご', 'nashi': 'なし',
+            'budou': 'ぶどう', 'kaki': 'かき', 'kudamono': 'くだもの', 'yasai': 'やさい', 'ninjin': 'にんじん',
+            'tamanegi': 'たまねぎ', 'kyabetsu': 'きゃべつ', 'tomato': 'とまと', 'nasu': 'なす', 'kabocha': 'かぼちゃ',
+            'imo': 'いも', 'satsumaimo': 'さつまいも', 'kuri': 'くり', 'take': 'たけ', 'takenoko': 'たけのこ',
+            'kinoko': 'きのこ', 'shiitake': 'しいたけ', 'daikon': 'だいこん', 'hakusai': 'はくさい', 'negi': 'ねぎ',
+            'kyouri': 'きょうり', 'retasu': 'れたす', 'piiman': 'ぴいまん', 'sakuramochi': 'さくらもち', 'kashiwa': 'かしわ',
+            'mugi': 'むぎ', 'kome': 'こめ', 'mochi': 'もち', 'pan': 'ぱん', 'soba': 'そば',
+            'udon': 'うどん', 'ramen': 'らめん', 'sushi': 'すし', 'sashimi': 'さしみ', 'tempura': 'てんぷら',
+            'tonkatsu': 'とんかつ', 'karaage': 'からあげ', 'yakitori': 'やきとり', 'okonomiyaki': 'おこのみやき', 'takoyaki': 'たこやき',
+            'onigiri': 'おにぎり', 'bento': 'べんとう', 'raisu': 'らいす', 'karee': 'かれえ', 'soup': 'すーぷ',
+            'shoyu': 'しょうゆ', 'miso': 'みそ', 'sato': 'さとう', 'shio': 'しお', 'kona': 'こな',
+            'cha': 'ちゃ', 'koucha': 'こうちゃ', 'miruku': 'みるく', 'kohii': 'こーひー', 'soda': 'そーだ',
+            'sake': 'さけ', 'biiru': 'びいる', 'wain': 'わいん', 'mizu': 'みず', 'yu': 'ゆ',
 
-        // Huruf vokal
-        const vowels = new Set(["a", "i", "u", "e", "o", "n"]);
+            // Tubuh & Manusia
+            'hito': 'ひと', 'otoko': 'おとこ', 'onna': 'おんな', 'kodomo': 'こども', 'ojiisan': 'おじいさん',
+            'obaasan': 'おばあさん', 'otouto': 'おとうと', 'imouto': 'いもうと', 'ani': 'あに', 'ane': 'あね',
+            'kazoku': 'かぞく', 'tomodachi': 'ともだち', 'nakama': 'なかま', 'sensei': 'せんせい', 'gakusei': 'がくせい',
+            'dokuta': 'どくた', 'koushi': 'こうし', 'shain': 'しゃいん', 'tennin': 'てんにん', 'isha': 'いしゃ',
+            'kango': 'かんご', 'kaikei': 'かいけい', 'shujin': 'しゅじん', 'tsuma': 'つま', 'ko': 'こ',
+            'atama': 'あたま', 'kashira': 'かしら', 'me': 'め', 'mimi': 'みみ', 'hana': 'はな',
+            'kuchi': 'くち', 'kao': 'かお', 'hitai': 'ひたい', 'mayu': 'まゆ', 'hitomi': 'ひとみ',
+            'kami': 'かみ', 'nodo': 'のど', 'mune': 'むね', 'koshi': 'こし', 'te': 'て',
+            'yubi': 'ゆび', 'ashi': 'あし', 'kune': 'くね', 'karada': 'からだ', 'shinzo': 'しんぞう',
+            'kimo': 'きも', 'hada': 'はだ', 'kami': 'かみ', 'chikara': 'ちから', 'seishin': 'せいしん',
+            'kokoro': 'こころ', 'inochi': 'いのち', 'kaze': 'かぜ', 'byouki': 'びょうき', 'genki': 'げんき',
+            'kenkou': 'けんこう', 'byouin': 'びょういん', 'shindan': 'しんだん', 'kusuri': 'くすり', 'teate': 'てあて',
 
-        // Mendapatkan awalan yang diperlukan dari kata terakhir
-        function getRequiredPrefix(word) {
-            if (!word) return "";
-            const lowerWord = word.toLowerCase();
-            const lastChar = lowerWord.slice(-1);
-            
-            if (vowels.has(lastChar) || lastChar === "n") {
-                return lastChar;
-            } else {
-                return lowerWord.slice(-2);
-            }
-        }
+            // Benda & Rumah
+            'ie': 'いえ', 'kane': 'かね', 'yane': 'やね', 'heya': 'へや', 'madobe': 'まどべ',
+            'mado': 'まど', 'doa': 'どあ', 'kagi': 'かぎ', 'kabe': 'かべ', 'yuka': 'ゆか',
+            'tenjou': 'てんじょう', 'tsukue': 'つくえ', 'isu': 'いす', 'suiseku': 'すいせく', 'tana': 'たな',
+            'hako': 'はこ', 'kaban': 'かばん', 'sakkusu': 'さっくす', 'kutsugoto': 'くつごと', 'hako': 'はこ',
+            'hon': 'ほん', 'shinbun': 'しんぶん', 'zasshi': 'ざっし', 'enpitsu': 'えんぴつ', 'pen': 'ぺん',
+            'kami': 'かみ', 'keshigomu': 'けしごむ', 'nawa': 'なわ', 'ito': 'いと', 'himo': 'ひも',
+            'kutsu': 'くつ', 'zouri': 'ぞうり', 'kutsushita': 'くつした', 'shatsu': 'しゃつ', 'zubon': 'ずぼん',
+            'kiita': 'きいた', 'hachimaki': 'はちまき', 'obi': 'おび', 'kasa': 'かさ', 'bou': 'ぼう',
+            'denki': 'でんき', 'akari': 'あかり', 'tokei': 'とけい', 'kane': 'かね', 'sentaku': 'せんたく',
+            'kutsu': 'くつ', 'nureginu': 'ぬれぎぬ', 'taoru': 'たおる', 'kamisori': 'かみそり', 'hanakaze': 'はなかぜ',
+            'sentakuki': 'せんたくき', 'reizouko': 'れいぞうこ', 'kikai': 'きかい', 'pasokon': 'ぱそこん', 'keitai': 'けいたい',
+            'denwa': 'でんわ', 'terebi': 'てれび', 'kamera': 'かめら', 'dendo': 'でんど', 'sharyou': 'しゃりょう',
+            'kuruma': 'くるま', 'jitensha': 'じてんしゃ', 'densha': 'でんしゃ', 'basu': 'ばす', 'hikouki': 'ひこうき',
+            'fune': 'ふね', 'takushi': 'たくし', 'ekimae': 'えきまえ', 'douro': 'どうろ', 'hashi': 'はし',
+            'saka': 'さか', 'toge': 'とげ', 'kita': 'きた', 'minami': 'みなみ', 'higashi': 'ひがし',
+            'nishi': 'にし', 'mukou': 'むこう', 'soto': 'そと', 'naka': 'なか', 'ue': 'うえ',
+            'shita': 'した', 'mae': 'まえ', 'ushiro': 'うしろ', 'tonari': 'となり', 'soba': 'そば',
 
-        // Memulai game baru
-        function initGame() {
-            usedWords = [];
-            mistakes = 0;
-            lastWord = "";
-            gameActive = true;
-            
-            wordInput.disabled = false;
-            submitBtn.disabled = false;
-            gameOverEl.style.display = "none";
-            wordListEl.innerHTML = "";
-            messageEl.style.display = "none";
-            
-            mistakesEl.textContent = "0";
-            countEl.textContent = "0";
-            
-            // Kata awal
-            const startWords = ["neko", "ringo", "kaze", "mikan", "aoi"];
-            const startWord = startWords[Math.floor(Math.random() * startWords.length)];
-            
-            addWord(startWord);
-            showMessage("Game dimulai! Lanjutkan kata di atas.", "info");
-        }
+            // Sekolah & Pendidikan
+            'gakkou': 'がっこう', 'kyoushitsu': 'きょうしつ', 'manabi': 'まなび', 'benkyou': 'べんきょう', 'shukudai': 'しゅくだい',
+            'shiken': 'しけん', 'seiseki': 'せいせき', 'jugyou': 'じゅぎょう', 'kyouiku': 'きょういく', 'koku': 'こく',
+            'sansuu': 'さんすう', 'rika': 'りか', 'shakai': 'しゃかい', 'eigo': 'えいご', 'suugaku': 'すうがく',
+            'butsuri': 'ぶつり', 'kagaku': 'かがく', 'rekishi': 'れきし', 'chiri': 'ちり', 'ongaku': 'おんがく',
+            'bijutsu': 'びじゅつ', 'taiiku': 'たいいく', 'undou': 'うんどう', 'supotsu': 'すぽつ', 'sakka': 'さっか',
+            'sakubun': 'さくぶん', 'dokusha': 'どくしゃ', 'shousetsu': 'しょうせつ', 'shi': 'し', 'koten': 'こてん',
 
-        // Menambah kata ke riwayat
-        function addWord(romaji) {
-            usedWords.push(romaji);
-            lastWord = romaji;
-            
-            const hiragana = dictionary[romaji] || romaji;
-            const wordEl = document.createElement("span");
-            wordEl.className = "word-item";
-            wordEl.textContent = hiragana;
-            wordListEl.appendChild(wordEl);
-            wordListEl.scrollTop = wordListEl.scrollHeight;
-            
-            countEl.textContent = usedWords.length;
-            
-            // Update petunjuk awalan
-            const prefix = getRequiredPrefix(lastWord);
-            nextCharsEl.textContent = prefix.toUpperCase();
-        }
+            // Perasaan & Sifat
+            'ai': 'あい', 'koi': 'こい', 'yuujou': 'ゆうじょう', 'shinrai': 'しんらい', 'kizuna': 'きずな',
+            'tanoshii': 'たのしい', 'ureshii': 'うれしい', 'sawayaka': 'さわやか', 'ia': 'いあ', 'yasashii': 'やさしい',
+            'kirei': 'きれい', 'kawaii': 'かわいい', 'sugoi': 'すごい', 'ii': 'いい', 'yoi': 'よい',
+            'atarashii': 'あたらしい', 'furui': 'ふるい', 'ookii': 'おおきい', 'chiisai': 'ちいさい', 'takai': 'たかい',
+            'hikui': 'ひくい', 'hayai': 'はやい', 'osoi': 'おそい', 'tsuyoi': 'つよい', 'yowai': 'よわい',
+            'kashikoi': 'かしこい', 'makoto': 'まこと', 'hontou': 'ほんとう', 'sore': 'それ', 'kore': 'これ',
+            'kanashii': 'かなしい', 'samui': 'さむい', 'atsui': 'あつい', 'hayai': 'はやい', 'tadashii': 'ただしい',
+            'urusai': 'うるさい', 'shizuka': 'しずか', 'suteki': 'すてき', 'genki': 'げんき', 'heisei': 'へいせい',
+            'reiwa': 'れいわ', 'kirai': 'きらい', 'daisuki': 'だいすき', 'manzoku': 'まんぞく', 'machigai': 'まちがい',
 
-        // Menampilkan pesan
-        function showMessage(text, type) {
-            messageEl.textContent = text;
-            messageEl.className = "message " + type;
-            messageEl.style.display = "block";
-        }
-
-        // Memeriksa kata yang dimasukkan
-        function checkWord() {
-            if (!gameActive) return;
-            
-            const input = wordInput.value.trim().toLowerCase();
-            wordInput.value = "";
-            
-            if (!input) {
-                showMessage("Silakan masukkan kata terlebih dahulu.", "error");
-                return;
-            }
-            
-            // Cek apakah ada di kamus
-            if (!dictionary[input]) {
-                mistakes++;
-                mistakesEl.textContent = mistakes;
-                showMessage(`"${input}" tidak ada dalam kosakata! Kesalahan ke-${mistakes}/3.`, "error");
-                
-                if (mistakes >= 3) {
-                    endGame();
-                }
-                return;
-            }
-            
-            // Cek apakah sudah digunakan
-            if (usedWords.includes(input)) {
-                mistakes++;
-                mistakesEl.textContent = mistakes;
-                showMessage(`Kata "${input}" sudah digunakan! Kesalahan ke-${mistakes}/3.`, "error");
-                
-                if (mistakes >= 3) {
-                    endGame();
-                }
-                return;
-            }
-            
-            // Cek awalan sesuai aturan
-            const requiredPrefix = getRequiredPrefix(lastWord);
-            if (!input.startsWith(requiredPrefix)) {
-                mistakes++;
-                mistakesEl.textContent = mistakes;
-                showMessage(`Harus diawali dengan "${requiredPrefix.toUpperCase()}"! Kesalahan ke-${mistakes}/3.`, "error");
-                
-                if (mistakes >= 3) {
-                    endGame();
-                }
-                return;
-            }
-            
-            // Jika benar
-            mistakes = 0;
-            mistakesEl.textContent = mistakes;
-            showMessage(`Benar! "${dictionary[input]}" (${input})`, "success");
-            addWord(input);
-        }
-
-        // Mengakhiri permainan
-        function endGame() {
-            gameActive = false;
-            wordInput.disabled = true;
-            submitBtn.disabled = true;
-            gameOverEl.style.display = "block";
-            showMessage("Permainan selesai! Anda melakukan 3 kesalahan.", "error");
-        }
-
-        // Event Listeners
-        submitBtn.addEventListener("click", checkWord);
-        restartBtn.addEventListener("click", initGame);
-
-        wordInput.addEventListener("keypress", function(e) {
-            if (e.key === "Enter") {
-                checkWord();
-            }
-        });
-
-        // Mulai saat halaman dimuat
-        initGame();
-    </script>
-</body>
-</html>
+            // Kata Umum Lainnya
+            'hajimemashite': 'はじめまして', 'arigatou': 'ありがとう', 'gomen': 'ごめん', 'sumimasen': 'すみません',
+            'ohayou': 'おはよう', 'konnichiwa': 'こんにちは', 'konbanwa': 'こんばんは', 'sayounara': 'さようなら',
+            'nani': 'なに', 'dare': 'だれ', 'doko': 'どこ', 'itsu': 'いつ', 'naze': 'なぜ',
+            'doushite': 'どうして', 'donna': 'どんな', 'dore': 'どれ', 'ikura': 'いくら', 'ikutsu': 'いくつ',
+            'ippai': 'いっぱい', 'takusan': 'たくさん', 'sukoshi': 'すこし', 'chotto': 'ちょっと', 'tottemo': 'とっても',
+            'totemo': 'とても', 'daijoubu': 'だいじょうぶ', 'dame': 'だめ', 'iiyo': 'いいよ', 'wakarimashita': 'わかりました',
+            'shiranai': 'しらない', 'wakaru': 'わかる', 'miru': 'みる', 'kiku': 'きく', 'hanasu': 'はなす',
+            'yomu': 'よむ', 'kaku': 'かく', 'taberu': 'たべる', 'nomu': 'のむ', 'au': 'あう',
+            'iku': 'いく', 'kuru': 'くる', 'kaeru': 'かえる', 'tsukuru': 'つくる', 'shiru': 'しる',
+            'neru': 'ねる', 'okiru': 'おきる', 'benkyou': 'べんきょう', 'hataraku': 'はたらく', 'yasumu': 'やすむ',
+            'tanomu': 'たのむ', 'omou': 'おもう', 'kangaeru': 'かんがえる', 'aisuru': 'あいする', 'shinjiru': 'しんじる',
+            'naru': 'なる', 'dekiru': 'できる', 'aru': 'ある', 'iru': 'いる', 'suru': 'する',
+            'yuku': 'ゆく', 'toku': 'とく', 'mata': 'また', 'itsumo': 'いつも', 'itsuka': 'いつか',
+            'kyou': 'きょう', 'ashita': 'あした', 'kinou': 'きのう', 'otoi': 'おとい', 'senshuu': 'せんしゅう',
+            'raishuu': 'らいしゅう', 'kongetsu': 'こんげつ', 'raigetsu': 'らいげつ', 'kotoshi': 'ことし', 'rainen': 'らいねん',
+            'ima': 'いま', 'sugu': 'すぐ', 'goro': 'ごろ', 'dake': 'だけ', 'shika': 'しか',
+            'nado': 'など', 'tachi': 'たち', 'goro': 'ごろ', 'hodo': 'ほど', 'kiri': 'きり',
+            'bakari': 'ばかり', 'doki': 'どき', 'toki': 'とき', 'soba': 'そば', 'mae': 'まえ',
+            'ato': 'あと', 'saki': 'さき', 'ue': 'うえ', 'shita': 'した', 'naka': 'なか',
+            'soto': 'そと', 'ue': 'うえ', 'shita': 'した', 'hashi': 'はし', 'kado': 'かど',
+            'kichi': 'きち', 'sato': 'さと', 'machi': 'まち', 'ie': 'いえ', 'mune': 'むね',
+            'kaze': 'かぜ', 'hikari': 'ひかり', 'kage': 'かげ', 'oto': 'おと', 'koe': 'こえ',
+            'uta': 'うた', 'odori': 'おどり', 'eiga': 'えいが', 'geemu': 'げえむ', 'keshou': 'けしょう',
+            'saiji': 'さいじ', 'matsuri': 'まつり', 'enbutsu': 'えんぶつ', 'jinja': 'じんじゃ', 'tera': 'てら',
+            'otera': 'おてら', 'kirei': 'きれい', 'shiawase': 'しあわせ', 'kibou': 'きぼう', 'negai': 'ねがい',
+            'chikara': 'ちから', 'unmei': 'うんめい', 'kiseki': 'きせき', 'mahou': 'まほう', 'yume': 'ゆめ',
+            'mirai': 'みらい', 'kako': 'かこ', 'ima': 'いま', 'eien': 'えいえん', 'owari': 'おわり',
+            'hajimari': 'はじまり', 'tsuzuki': 'つづき', 'kotae': 'こたえ', 'mondai': 'もんだい', 'kanga': 'かんが',
+            'tasuke': 'たすけ', 'kizuku': 'きづく', 'manabu': 'まなぶ', 'narau': 'ならう', 'tsutawaru': 'つたわる',
+            'tsukiau': 'つきあう', 'tomonau': 'ともなう', 'sodatsu': 'そだつ', 'ikiru': 'いきる', 'shinu': 'しぬ',
+            'tachimukau': 'たちむかう', 'makeru': 'まける', 'katsu': 'かつ', 'susumu': 'すすむ', 'tomaru': 'とまる',
+            'kawaru': 'かわる', 'tsuzuku': 'つづく', 'todoku': 'とどく', 'tsukamaeru': 'つかまえる', 'motsu': 'もつ',
+            'mochi': 'もち', 'kawau': 'かわう', 'kaesu': 'かえす', 'suteru': 'すてる', 'erabu': 'えらぶ',
+            'kimeru': 'きめる', 'ayumu': 'あゆむ', 'hashiru': 'はしる', 'tobu': 'とぶ', 'oyogu': 'およぐ',
+            'asobu': 'あそぶ', 'tansaku': 'たんさく', 'kensaku': 'けんさく', 'shiritori': 'しりとり', 'kotoba': 'ことば',
+            'ji': 'じ', 'kana': 'かな', 'moji': 'もじ', 'aiueo': 'あいうえお', 'kaze': 'かぜ',
+            'sora': 'そら', 'hana': 'はな', 'umi': 'うみ', 'yama': 'やま', 'kawa': 'かわ',
+            'hito': 'ひと', 'kokoro': 'こころ', 'ai': 'あい', 'yume': 'ゆめ', 'kaze': 'かぜ',
+            'neko': 'ねこ', 'inu': 'いぬ', 'sora': 'そら', 'hoshi': 'ほし', 'tsuki': 'つき',
+            'sakura': 'さくら', 'momo': 'もも', 'ringo': 'りんご', 'mikan': 'みかん', 'kaki': 'かき',
+            'cha': 'ちゃ', 'kome': 'こめ', 'mizu': 'みず', 'kaze': 'かぜ', 'hana': 'はな',
+            'aoi': 'あおい', 'akai': 'あかい', 'kiiro': 'きいろ', 'midori': 'みどり', 'shiro': 'しろ',
+            'kuro': 'くろ', 'pinku': 'ぴんく', 'ao': 'あお', 'aka': 'あか', 'ki': 'き',
+            'cha': 'ちゃ', 'hai': 'はい', 'iie': 'いいえ', 'wakarimashita': 'わかりました', 'doushite': 'どうして',
+            'naze': 'なぜ', 'dare': 'だれ', 'doko': 'どこ', 'itsu': 'いつ', 'nani': 'なに',
+            'kore': 'これ', 'sore': 'それ', 'are': 'あれ', 'koko': 'ここ', 'soko': 'そこ',
+            'asoko': 'あそこ', 'doko': 'どこ', 'jibun': 'じぶん', 'tashika': 'たしか', 'zenbu': 'ぜんぶ',
+            'minna': 'みんな', 'dareka': 'だれか', 'nanika': 'なにか', 'dokoka': 'どこか', 'itsuka': 'いつか',
+            'itsumo': 'いつも', 'tokidoki': 'ときどき', 'mainichi': 'まいにち', 'maiban': 'まいばん', 'maishuu': 'まいしゅう',
+            'maigetsu': 'まいげつ', 'mainen': 'まいねん', 'itsudemo': 'いつでも', 'dokodemo': 'どこでも', 'nandemo': 'なんでも',
+            'daremo': 'だれも', 'doko mo': 'どこも', 'nani mo': 'なにも', 'itsu mo': 'いつも', 'mou': 'もう',
+            'mada': 'まだ', 'sugu': 'すぐ', 'goro': 'ごろ', 'hodo': 'ほど', 'dake': 'だけ',
+            'shika': 'しか', 'nado': 'など', 'tachi': 'たち', 'goro': 'ごろ', 'kiri': 'きり',
+            'bakari': 'ばかり', 'doki': 'どき', 'toki': 'とき', 'soba': 'そば', 'mae': 'まえ',
+            'ato': 'あと', 'saki': 'さき', 'ue': 'うえ', 'shita': 'した', 'naka': 'なか',
+            'soto': 'そと', 'chikara': 'ちから', 'kokoro': 'こころ', 'inochi': 'いのち', 'hikari': 'ひかり',
+            'kage': 'かげ', 'oto': 'おと', 'koe': 'こえ', 'uta': 'うた', 'eiga': 'えいが',
+            'hon': 'ほん', 'dokusha': 'どくしゃ', 'shousetsu': 'しょうせつ', 'shi': 'し', 'koten': 'こてん',
+            'jinsei': 'じんせい', 'kachi': 'かち', 'makena': 'まけな', 'tsuyoku': 'つよく', 'yasashiku': 'やさしく',
+            'hayaku': 'はやく', 'yukkuri': 'ゆっくり', 'suguni': 'すぐに', 'kanarazu': 'かならず', 'zutto': 'ずっと',
+            'itsudemo': 'いつでも', 'doko demo': 'どこでも', 'nani demo': 'なにでも', 'dare demo': 'だれでも', 'hontouni': 'ほんとうに',
+            'sugoku': 'すごく', 'totemo': 'とても', 'chotto': 'ちょっと', 'sukoshi': 'すこし', 'takusan': 'たくさん',
+            'ippai': 'いっぱい', 'ironn
