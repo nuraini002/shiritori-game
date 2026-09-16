@@ -3,332 +3,463 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Shiritori Jepang - Fixed Layout</title>
+    <title>Game Shiritori</title>
     <style>
-        :root {
-            --bg-color: #f0f7f6;
-            --main-teal: #a3d2ca;
-            --dark-teal: #5e8b83;
-            --light-teal: #e8f4f2;
-            --white: #ffffff;
-            --danger: #e29797;
-            --text-color: #334e4a;
-        }
-
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: #e6f7f2;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            padding: 15px;
+            padding: 20px;
         }
 
         .game-container {
-            background-color: var(--white);
-            width: 100%;
-            max-width: 450px;
+            background-color: #ffffff;
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(94, 139, 131, 0.15);
-            padding: 25px;
-            text-align: center;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(100, 200, 180, 0.2);
+            max-width: 600px;
+            width: 100%;
+            border: 3px solid #b2e8d6;
         }
 
         h1 {
-            color: var(--dark-teal);
-            font-size: 26px;
-            margin-bottom: 10px;
+            color: #2c8c6e;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
         }
 
         .rules {
-            background-color: var(--light-teal);
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 13px;
-            text-align: left;
+            background-color: #e0f5ed;
+            padding: 15px;
+            border-radius: 12px;
             margin-bottom: 20px;
+            color: #24755c;
+            font-size: 0.9rem;
             line-height: 1.5;
-            border-left: 4px solid var(--main-teal);
         }
 
-        .status-panel {
+        .status-bar {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             margin-bottom: 20px;
-            font-weight: bold;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
-        .strikes {
-            color: var(--danger);
-            font-size: 16px;
-        }
-
-        .score {
-            background-color: var(--main-teal);
-            color: var(--white);
-            padding: 5px 15px;
-            border-radius: 15px;
-            font-size: 14px;
-        }
-
-        .word-display {
-            background-color: var(--light-teal);
-            border: 2px dashed var(--main-teal);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            min-height: 110px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .current-japanese {
-            font-size: 38px;
-            font-weight: bold;
-            color: var(--dark-teal);
-            margin-bottom: 5px;
-        }
-
-        .current-romaji {
-            font-size: 15px;
-            color: #7fa9a3;
-            letter-spacing: 1px;
-        }
-
-        .requirement-box {
-            font-size: 14px;
-            margin-bottom: 15px;
-            color: var(--dark-teal);
+        .status-item {
+            background-color: #d4f2e7;
+            padding: 10px 15px;
+            border-radius: 10px;
+            color: #1a5f4a;
             font-weight: 600;
         }
 
-        .requirement-box span {
-            background-color: var(--main-teal);
-            color: var(--white);
-            padding: 2px 8px;
-            border-radius: 5px;
-            font-size: 16px;
-            display: inline-block;
+        .next-hint {
+            background-color: #a8e6cf;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        /* PERBAIKAN UTAMA: Layout Input dan Tombol Kirim */
-        .input-group {
-            display: flex;
-            align-items: stretch;
-            gap: 8px;
-            margin-bottom: 15px;
-            width: 100%;
+        .next-hint .label {
+            color: #206c54;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
         }
 
-        input[type="text"] {
-            flex: 1;
-            min-width: 0; /* Mencegah input meluap keluar kontainer di mobile */
-            padding: 12px 15px;
-            border: 2px solid var(--main-teal);
-            border-radius: 10px;
-            font-size: 15px;
-            color: var(--text-color);
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--dark-teal);
-            box-shadow: 0 0 8px rgba(94, 139, 131, 0.2);
-        }
-
-        button#submitBtn {
-            background-color: var(--dark-teal);
-            color: var(--white);
-            border: none;
-            padding: 0 20px;
-            border-radius: 10px;
-            font-size: 15px;
+        .next-hint .chars {
+            color: #0f4d3a;
+            font-size: 1.8rem;
             font-weight: bold;
-            cursor: pointer;
-            white-space: nowrap; /* Mencegah teks tombol terlipat ke bawah */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.2s;
-            z-index: 5; /* Memastikan tombol berada di lapisan atas dan bisa diklik */
         }
 
-        button#submitBtn:hover {
-            background-color: #4a726b;
-        }
-
-        .message {
-            font-size: 14px;
-            min-height: 20px;
-            margin-bottom: 15px;
-            font-weight: 500;
-        }
-
-        .message.error { color: var(--danger); }
-        .message.success { color: var(--dark-teal); }
-
-        .history-box {
-            border-top: 1px solid var(--light-teal);
-            padding-top: 15px;
-            text-align: left;
-            max-height: 120px;
+        .word-history {
+            background-color: #f0faf7;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            min-height: 80px;
+            max-height: 150px;
             overflow-y: auto;
         }
 
-        .history-title {
-            font-size: 12px;
-            text-transform: uppercase;
-            color: #9cbab5;
-            margin-bottom: 8px;
-            font-weight: bold;
+        .word-history h3 {
+            color: #2c8c6e;
+            margin-bottom: 10px;
+            font-size: 1rem;
         }
 
-        .history-list {
+        .word-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            list-style: none;
+            gap: 8px;
         }
 
-        .history-item {
-            background-color: var(--light-teal);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 13px;
-        }
-
-        /* Modal Game Over */
-        .overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(51, 78, 74, 0.6);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-        }
-
-        .modal {
-            background-color: var(--white);
-            padding: 35px 25px;
+        .word-item {
+            background-color: #b2e8d6;
+            padding: 6px 12px;
             border-radius: 20px;
-            text-align: center;
-            max-width: 350px;
-            width: 90%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            color: #155742;
+            font-weight: 500;
         }
 
-        .modal h2 {
-            color: var(--danger);
-            margin-bottom: 15px;
-        }
-
-        .modal p {
+        .input-area {
+            display: flex;
+            gap: 10px;
             margin-bottom: 20px;
-            font-size: 16px;
         }
 
-        .modal button {
-            background-color: var(--dark-teal);
-            color: var(--white);
-            border: none;
-            padding: 12px 25px;
+        #word-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #b2e8d6;
             border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
+            font-size: 1rem;
+            color: #1a5f4a;
+            background-color: #f8fffc;
+        }
+
+        #word-input:focus {
+            outline: none;
+            border-color: #5cc9a8;
+            box-shadow: 0 0 0 3px rgba(92, 201, 168, 0.2);
+        }
+
+        button {
+            padding: 12px 25px;
+            background-color: #5cc9a8;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #3daf8c;
+        }
+
+        button:disabled {
+            background-color: #a8d9c9;
+            cursor: not-allowed;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .game-over {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+
+        .game-over h2 {
+            color: #c0392b;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .game-container {
+                padding: 20px;
+            }
+
+            .input-area {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-
     <div class="game-container">
-        <h1>しりとり Shiritori</h1>
+        <h1>🎮 Game Shiritori</h1>
+        
         <div class="rules">
-            <strong>Aturan main:</strong> Lanjutkan kata dengan 2 huruf terakhir (e.g., neko &rarr; ko). Jika huruf terakhir adalah vokal tunggal atau huruf 'n' (e.g., aoi, mikan), maka cukup gunakan 1 huruf terakhir saja. Ketik asal 3x salah = Kalah!
+            <strong>📜 Aturan:</strong><br>
+            • Lanjutkan dari <strong>2 huruf terakhir</strong> (contoh: neko → awalan ko)<br>
+            • Kecuali berakhiran <strong>huruf vokal (a,i,u,e,o) atau n</strong>, lanjutkan dari <strong>1 huruf terakhir</strong><br>
+            • 3x salah = Kalah! Ketik pakai <em>romaji</em>, tampil dalam <em>Hiragana</em>
         </div>
 
-        <div class="status-panel">
-            <div class="score">Skor: <span id="scoreVal">0</span></div>
-            <div class="strikes" id="strikeContainer">❌ Kesempatan: 3</div>
+        <div class="status-bar">
+            <div class="status-item">❌ Kesalahan: <span id="mistakes">0</span>/3</div>
+            <div class="status-item">📝 Kata: <span id="count">0</span></div>
         </div>
 
-        <div class="word-display">
-            <div class="current-japanese" id="currentJp">ねこ</div>
-            <div class="current-romaji" id="currentRomaji">neko</div>
+        <div class="next-hint">
+            <div class="label">Harus diawali dengan:</div>
+            <div class="chars" id="next-chars">-</div>
         </div>
 
-        <div class="requirement-box">
-            Kata berikutnya harus berawalan Romaji: <span id="reqPrefix">ko</span>
+        <div class="message" id="message"></div>
+
+        <div class="word-history">
+            <h3>📚 Riwayat Kata:</h3>
+            <div class="word-list" id="word-list"></div>
         </div>
 
-        <!-- Bagian Input yang Diperbaiki -->
-        <div class="input-group">
-            <input type="text" id="wordInput" placeholder="Ketik kata dalam Romaji..." autocomplete="off">
-            <button id="submitBtn">Kirim</button>
+        <div class="input-area">
+            <input type="text" id="word-input" placeholder="Ketik kata dalam romaji..." autocomplete="off">
+            <button id="submit-btn">Kirim</button>
         </div>
 
-        <div class="message" id="msgBox"></div>
-
-        <div class="history-box">
-            <div class="history-title">Riwayat Kata</div>
-            <ul class="history-list" id="historyList">
-                <li class="history-item">ねこ (neko)</li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Game Over Modal -->
-    <div class="overlay" id="gameOverOverlay">
-        <div class="modal">
-            <h2>Game Over! 🎮</h2>
-            <p>Anda telah melakukan 3 kesalahan input berturut-turut.</p>
-            <p><strong>Skor Akhir Anda: <span id="finalScore">0</span></strong></p>
-            <button id="restartBtn">Main Lagi</button>
+        <div class="game-over" id="game-over">
+            <h2>💀 Permainan Selesai!</h2>
+            <p style="margin-bottom: 20px; color: #666;">Anda melakukan 3 kesalahan berturut-turut.</p>
+            <button id="restart-btn">🔄 Mulai Lagi</button>
         </div>
     </div>
 
     <script>
-        const romajiToHiragana = {
-            'a':'あ','i':'い','u':'う','e':'え','o':'お',
-            'ka':'か','ki':'き','ku':'く','ke':'け','ko':'こ',
-            'sa':'さ','shi':'し','su':'す','se':'せ','so':'そ',
-            'ta':'た','chi':'ち','tsu':'つ','te':'て','to':'と',
-            'na':'な','ni':'ない','nu':'ぬ','ne':'ね','no':'の',
-            'ha':'は','hi':'ひ','fu':'ふ','he':'へ','ho':'ほ',
-            'ma':'ま','mi':'み','mu':'む','me':'め','mo':'も',
-            'ya':'や','yu':'ゆ','yo':'よ',
-            'ra':'ら','ri':'り','ru':'る','re':'れ','ro':'ろ',
-            'wa':'わ','wo':'を','n':'ん',
-            'ga':'が','gi':'ぎ','gu':'ぐ','ge':'げ','go':'ご',
-            'za':'ざ','ji':'じ','zu':'ず','ze':'ぜ','zo':'ぞ',
-            'da':'だ','de':'で','do':'ど',
-            'ba':'ば','bi':'び','bu':'ぶ','be':'べ','bo':'ぼ',
-            'pa':'ぱ','pi':'ぴ','pu':'ぷ','pe':'ぺ','po':'ぽ'
+        // Kosakata Jepang: romaji -> hiragana
+        const dictionary = {
+            "neko": "ねこ",
+            "inu": "いぬ",
+            "usagi": "うさぎ",
+            "ki": "き",
+            "kaze": "かぜ",
+            "zou": "ぞう",
+            "ringo": "りんご",
+            "gohan": "ごはん",
+            "nami": "なみ",
+            "mizu": "みず",
+            "aoi": "あおい",
+            "akai": "あかい",
+            "kaki": "かき",
+            "ikura": "いくら",
+            "mikan": "みかん",
+            "neko": "ねこ",
+            "kumo": "くも",
+            "mushi": "むし",
+            "shika": "しか",
+            "kame": "かめ",
+            "medaka": "めだか",
+            "kaze": "かぜ",
+            "zato": "ざと",
+            "tori": "とり",
+            "inu": "いぬ",
+            "uma": "うま",
+            "mimi": "みみ",
+            "minato": "みなと",
+            "tomo": "とも",
+            "momo": "もも",
+            "mono": "もの",
+            "naka": "なか",
+            "kuni": "くに",
+            "ne": "ね",
+            "ko": "こ",
+            "ni": "に",
+            "mi": "み",
+            "shi": "し",
+            "ka": "か",
+            "a": "あ",
+            "i": "い",
+            "u": "う",
+            "e": "え",
+            "o": "お",
+            "n": "ん"
         };
 
-        const japaneseDictionary = [
-            "neko", "koma", "machi", "chiba", "bako", "koneko", "kuma", "maru", "ringo", "gohan",
-            "aoi", "inu", "numa", "mikan", "ninja", "sakura", "raku", "kuruma", "matsuri", "riki",
-            "asahi", "hiragana", "natsu", "tsuki", "kita", "tabemono", "nomimono", "nohohon"
-        ];
+        // Variabel game
+        let usedWords = [];
+        let mistakes = 0;
+        let lastWord = "";
+        let gameActive = true;
 
-        let currentWord = "neko";
-        let score = 0;
-        let strikes = 3;
-        let usedWords = ["neko"];
-        let requiredPrefix = "ko";
+        // Elemen DOM
+        const wordInput = document.getElementById("word-input");
+        const submitBtn = document.getElementById("submit-btn");
+        const restartBtn = document.getElementById("restart-btn");
+        const nextCharsEl = document.getElementById("next-chars");
+        const wordListEl = document.getElementById("word-list");
+        const mistakesEl = document.getElementById("mistakes");
+        const countEl = document.getElementById("count");
+        const messageEl = document.getElementById("message");
+        const gameOverEl = document.getElementById("game-over");
 
-        
+        // Huruf vokal
+        const vowels = new Set(["a", "i", "u", "e", "o", "n"]);
+
+        // Mendapatkan awalan yang diperlukan dari kata terakhir
+        function getRequiredPrefix(word) {
+            if (!word) return "";
+            const lowerWord = word.toLowerCase();
+            const lastChar = lowerWord.slice(-1);
+            
+            if (vowels.has(lastChar) || lastChar === "n") {
+                return lastChar;
+            } else {
+                return lowerWord.slice(-2);
+            }
+        }
+
+        // Memulai game baru
+        function initGame() {
+            usedWords = [];
+            mistakes = 0;
+            lastWord = "";
+            gameActive = true;
+            
+            wordInput.disabled = false;
+            submitBtn.disabled = false;
+            gameOverEl.style.display = "none";
+            wordListEl.innerHTML = "";
+            messageEl.style.display = "none";
+            
+            mistakesEl.textContent = "0";
+            countEl.textContent = "0";
+            
+            // Kata awal
+            const startWords = ["neko", "ringo", "kaze", "mikan", "aoi"];
+            const startWord = startWords[Math.floor(Math.random() * startWords.length)];
+            
+            addWord(startWord);
+            showMessage("Game dimulai! Lanjutkan kata di atas.", "info");
+        }
+
+        // Menambah kata ke riwayat
+        function addWord(romaji) {
+            usedWords.push(romaji);
+            lastWord = romaji;
+            
+            const hiragana = dictionary[romaji] || romaji;
+            const wordEl = document.createElement("span");
+            wordEl.className = "word-item";
+            wordEl.textContent = hiragana;
+            wordListEl.appendChild(wordEl);
+            wordListEl.scrollTop = wordListEl.scrollHeight;
+            
+            countEl.textContent = usedWords.length;
+            
+            // Update petunjuk awalan
+            const prefix = getRequiredPrefix(lastWord);
+            nextCharsEl.textContent = prefix.toUpperCase();
+        }
+
+        // Menampilkan pesan
+        function showMessage(text, type) {
+            messageEl.textContent = text;
+            messageEl.className = "message " + type;
+            messageEl.style.display = "block";
+        }
+
+        // Memeriksa kata yang dimasukkan
+        function checkWord() {
+            if (!gameActive) return;
+            
+            const input = wordInput.value.trim().toLowerCase();
+            wordInput.value = "";
+            
+            if (!input) {
+                showMessage("Silakan masukkan kata terlebih dahulu.", "error");
+                return;
+            }
+            
+            // Cek apakah ada di kamus
+            if (!dictionary[input]) {
+                mistakes++;
+                mistakesEl.textContent = mistakes;
+                showMessage(`"${input}" tidak ada dalam kosakata! Kesalahan ke-${mistakes}/3.`, "error");
+                
+                if (mistakes >= 3) {
+                    endGame();
+                }
+                return;
+            }
+            
+            // Cek apakah sudah digunakan
+            if (usedWords.includes(input)) {
+                mistakes++;
+                mistakesEl.textContent = mistakes;
+                showMessage(`Kata "${input}" sudah digunakan! Kesalahan ke-${mistakes}/3.`, "error");
+                
+                if (mistakes >= 3) {
+                    endGame();
+                }
+                return;
+            }
+            
+            // Cek awalan sesuai aturan
+            const requiredPrefix = getRequiredPrefix(lastWord);
+            if (!input.startsWith(requiredPrefix)) {
+                mistakes++;
+                mistakesEl.textContent = mistakes;
+                showMessage(`Harus diawali dengan "${requiredPrefix.toUpperCase()}"! Kesalahan ke-${mistakes}/3.`, "error");
+                
+                if (mistakes >= 3) {
+                    endGame();
+                }
+                return;
+            }
+            
+            // Jika benar
+            mistakes = 0;
+            mistakesEl.textContent = mistakes;
+            showMessage(`Benar! "${dictionary[input]}" (${input})`, "success");
+            addWord(input);
+        }
+
+        // Mengakhiri permainan
+        function endGame() {
+            gameActive = false;
+            wordInput.disabled = true;
+            submitBtn.disabled = true;
+            gameOverEl.style.display = "block";
+            showMessage("Permainan selesai! Anda melakukan 3 kesalahan.", "error");
+        }
+
+        // Event Listeners
+        submitBtn.addEventListener("click", checkWord);
+        restartBtn.addEventListener("click", initGame);
+
+        wordInput.addEventListener("keypress", function(e) {
+            if (e.key === "Enter") {
+                checkWord();
+            }
+        });
+
+        // Mulai saat halaman dimuat
+        initGame();
+    </script>
+</body>
+</html>
