@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Shiritori Jepang - Pastel Teal</title>
+    <title>Game Shiritori Jepang - Fixed Layout</title>
     <style>
         :root {
             --bg-color: #f0f7f6;
@@ -29,22 +29,22 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
 
         .game-container {
             background-color: var(--white);
             width: 100%;
-            max-width: 500px;
+            max-width: 450px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(94, 139, 131, 0.15);
-            padding: 30px;
+            padding: 25px;
             text-align: center;
         }
 
         h1 {
             color: var(--dark-teal);
-            font-size: 28px;
+            font-size: 26px;
             margin-bottom: 10px;
         }
 
@@ -63,13 +63,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             font-weight: bold;
         }
 
         .strikes {
             color: var(--danger);
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .score {
@@ -77,15 +77,16 @@
             color: var(--white);
             padding: 5px 15px;
             border-radius: 15px;
+            font-size: 14px;
         }
 
         .word-display {
             background-color: var(--light-teal);
             border: 2px dashed var(--main-teal);
             border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 25px;
-            min-height: 120px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 110px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -93,21 +94,21 @@
         }
 
         .current-japanese {
-            font-size: 42px;
+            font-size: 38px;
             font-weight: bold;
             color: var(--dark-teal);
             margin-bottom: 5px;
         }
 
         .current-romaji {
-            font-size: 16px;
+            font-size: 15px;
             color: #7fa9a3;
             letter-spacing: 1px;
         }
 
         .requirement-box {
             font-size: 14px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: var(--dark-teal);
             font-weight: 600;
         }
@@ -118,20 +119,25 @@
             padding: 2px 8px;
             border-radius: 5px;
             font-size: 16px;
+            display: inline-block;
         }
 
+        /* PERBAIKAN UTAMA: Layout Input dan Tombol Kirim */
         .input-group {
             display: flex;
-            gap: 10px;
+            align-items: stretch;
+            gap: 8px;
             margin-bottom: 15px;
+            width: 100%;
         }
 
         input[type="text"] {
             flex: 1;
-            padding: 12px 20px;
+            min-width: 0; /* Mencegah input meluap keluar kontainer di mobile */
+            padding: 12px 15px;
             border: 2px solid var(--main-teal);
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 15px;
             color: var(--text-color);
             outline: none;
             transition: all 0.3s ease;
@@ -142,19 +148,24 @@
             box-shadow: 0 0 8px rgba(94, 139, 131, 0.2);
         }
 
-        button {
+        button#submitBtn {
             background-color: var(--dark-teal);
             color: var(--white);
             border: none;
-            padding: 12px 25px;
+            padding: 0 20px;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
+            white-space: nowrap; /* Mencegah teks tombol terlipat ke bawah */
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: background-color 0.2s;
+            z-index: 5; /* Memastikan tombol berada di lapisan atas dan bisa diklik */
         }
 
-        button:hover {
+        button#submitBtn:hover {
             background-color: #4a726b;
         }
 
@@ -211,10 +222,10 @@
 
         .modal {
             background-color: var(--white);
-            padding: 30px;
+            padding: 35px 25px;
             border-radius: 20px;
             text-align: center;
-            max-width: 400px;
+            max-width: 350px;
             width: 90%;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
@@ -227,6 +238,17 @@
         .modal p {
             margin-bottom: 20px;
             font-size: 16px;
+        }
+
+        .modal button {
+            background-color: var(--dark-teal);
+            color: var(--white);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -252,6 +274,7 @@
             Kata berikutnya harus berawalan Romaji: <span id="reqPrefix">ko</span>
         </div>
 
+        <!-- Bagian Input yang Diperbaiki -->
         <div class="input-group">
             <input type="text" id="wordInput" placeholder="Ketik kata dalam Romaji..." autocomplete="off">
             <button id="submitBtn">Kirim</button>
@@ -278,13 +301,12 @@
     </div>
 
     <script>
-        // Mapping Romaji ke Hiragana sederhana untuk validasi kosakatanya
         const romajiToHiragana = {
             'a':'あ','i':'い','u':'う','e':'え','o':'お',
             'ka':'か','ki':'き','ku':'く','ke':'け','ko':'こ',
             'sa':'さ','shi':'し','su':'す','se':'せ','so':'そ',
             'ta':'た','chi':'ち','tsu':'つ','te':'て','to':'と',
-            'na':'な','ni':'に','nu':'ぬ','ne':'ね','no':'の',
+            'na':'な','ni':'ない','nu':'ぬ','ne':'ね','no':'の',
             'ha':'は','hi':'ひ','fu':'ふ','he':'へ','ho':'ほ',
             'ma':'ま','mi':'み','mu':'む','me':'め','mo':'も',
             'ya':'や','yu':'ゆ','yo':'よ',
@@ -294,11 +316,9 @@
             'za':'ざ','ji':'じ','zu':'ず','ze':'ぜ','zo':'ぞ',
             'da':'だ','de':'で','do':'ど',
             'ba':'ば','bi':'び','bu':'ぶ','be':'べ','bo':'ぼ',
-            'pa':'ぱ','pi':'ぴ','pu':'pu','pe':'ぺ','po':'ぽ'
+            'pa':'ぱ','pi':'ぴ','pu':'ぷ','pe':'ぺ','po':'ぽ'
         };
 
-        // Bank data kosakata Jepang buatan sebagai validasi kata asli
-        // Dalam game nyata, database ini bisa diperluas sebanyak mungkin
         const japaneseDictionary = [
             "neko", "koma", "machi", "chiba", "bako", "koneko", "kuma", "maru", "ringo", "gohan",
             "aoi", "inu", "numa", "mikan", "ninja", "sakura", "raku", "kuruma", "matsuri", "riki",
@@ -311,14 +331,4 @@
         let usedWords = ["neko"];
         let requiredPrefix = "ko";
 
-        const wordInput = document.getElementById('wordInput');
-        const submitBtn = document.getElementById('submitBtn');
-        const currentJp = document.getElementById('currentJp');
-        const currentRomaji = document.getElementById('currentRomaji');
-        const reqPrefix = document.getElementById('reqPrefix');
-        const msgBox = document.getElementById('msgBox');
-        const scoreVal = document.getElementById('scoreVal');
-        const strikeContainer = document.getElementById('strikeContainer');
-        const historyList = document.getElementById('historyList');
-        const gameOverOverlay = document.getElementById('gameOverOverlay');
         
